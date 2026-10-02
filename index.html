@@ -164,7 +164,7 @@
         <p>&copy; 2026 LastFrameExtractor. All rights reserved.</p>
     </footer>
 
-    <!-- Frontend Extraction & Ad Trigger Script -->
+    <!-- Frontend Extraction & Popunder Trigger Script -->
     <script>
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('video-file-input');
@@ -230,14 +230,14 @@
         downloadBtn.addEventListener('click', () => {
             if (!resultImg.src) return;
 
-            // Trigger Adsterra script dynamically on download action
+            // Trigger Adsterra Popunder dynamically on download action
             try {
-                const adScript = document.createElement('script');
-                adScript.type = 'text/javascript';
-                adScript.src = 'https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25';
-                document.body.appendChild(adScript);
+                const popScript = document.createElement('script');
+                popScript.setAttribute('data-cfasync', 'false');
+                popScript.src = 'https://abscloud.org/1/25fff96bdb25dfcca033fe37a12a2f9a';
+                document.body.appendChild(popScript);
             } catch (err) {
-                console.log('Ad trigger handled');
+                console.log('Popunder triggered');
             }
 
             // Proceed with image download
