@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LastFrameExtractor - Extract the Last Frame of Any Video Instantly</title>
-    <meta name="description" content="Free online tool to extract the exact last frame of any MP4, MOV, or WebM video. Perfect for AI video extension (Runway, Kling, Sora) and professional editors.">
-    <meta name="keywords" content="extract last frame from video, video frame grabber, last frame extractor, AI video reference frame, get last frame mp4">
+    <title>LastFrameExtractor - Extract Any Frame or Last Frame Instantly</title>
+    <meta name="description" content="Free online tool to extract exact frames or the final last frame from any MP4, MOV, or WebM video. Perfect for AI video creators (Runway, Kling, Sora) and editors.">
+    <meta name="keywords" content="extract last frame from video, video frame grabber, last frame extractor, AI video reference frame, get last frame mp4, video to frame converter">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -50,7 +51,7 @@
             <div class="flex items-center space-x-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-accentBlue border border-blue-500/20">
                     <span class="w-1.5 h-1.5 rounded-full bg-accentBlue mr-1.5 animate-pulse"></span>
-                    v1.0 Live
+                    v2.0 Enhanced
                 </span>
             </div>
         </div>
@@ -76,10 +77,10 @@
         <!-- Hero Section -->
         <div class="text-center space-y-4 max-w-3xl">
             <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
-                Extract the <span class="text-transparent bg-clip-text bg-gradient-to-r from-accentBlue via-indigo-400 to-accentPurple">Last Frame</span> Instantly
+                Extract <span class="text-transparent bg-clip-text bg-gradient-to-r from-accentBlue via-indigo-400 to-accentPurple">Any Frame</span> or Last Frame
             </h1>
             <p class="text-lg text-gray-400">
-                The ultimate browser-based tool for video editors and AI video creators (Runway, Kling, Sora) to grab exact high-res ending frames seamlessly.
+                Browser-based video frame grabber for editors & AI video creators (Runway, Kling, Sora). Pick exact frames or grab the ending frame with precision.
             </p>
         </div>
 
@@ -101,31 +102,99 @@
                 </label>
             </div>
 
-            <!-- Video Processing Preview Area (Hidden by default) -->
-            <div id="preview-container" class="hidden mt-6 space-y-4">
+            <!-- Video Processing & Selector Area (Hidden by default) -->
+            <div id="preview-container" class="hidden space-y-6">
+                <!-- Header Status -->
                 <div class="flex items-center justify-between bg-darkBg/60 p-4 rounded-xl border border-gray-800">
                     <div class="flex items-center space-x-3 overflow-hidden">
                         <i class="fa-solid fa-file-video text-accentBlue text-xl"></i>
                         <span id="file-name" class="text-sm font-medium text-gray-300 truncate">video.mp4</span>
                     </div>
-                    <button id="remove-file" class="text-gray-500 hover:text-red-400 transition-colors text-sm">
-                        <i class="fa-solid fa-trash-can"></i>
+                    <button id="remove-file" class="text-gray-500 hover:text-red-400 transition-colors text-sm px-3 py-1.5 rounded-lg bg-gray-800/50 hover:bg-red-500/10">
+                        <i class="fa-solid fa-trash-can mr-1.5"></i> Change Video
                     </button>
                 </div>
-                
-                <!-- Hidden Video Element for Processing -->
-                <video id="source-video" class="hidden" preload="auto"></video>
+
+                <!-- Video Player Preview -->
+                <div class="relative rounded-xl overflow-hidden border border-gray-800 shadow-2xl bg-black flex justify-center items-center">
+                    <video id="source-video" class="max-h-[420px] w-auto mx-auto" preload="auto" playsinline></video>
+                </div>
+
+                <!-- Interactive Player Timeline Controls -->
+                <div class="bg-darkBg/80 p-5 rounded-xl border border-gray-800 space-y-4">
+                    <!-- Timeline Slider & Time Display -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+                            <span id="current-time-display">00:00.00</span>
+                            <span id="total-time-display">00:00.00</span>
+                        </div>
+                        <input type="range" id="time-slider" min="0" value="0" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentBlue">
+                    </div>
+
+                    <!-- Fine Control Buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <div class="flex items-center space-x-2">
+                            <button id="prev-frame-btn" title="Previous Frame" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <span>-1 Frame</span>
+                            </button>
+                            <button id="toggle-play-btn" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1.5">
+                                <i id="play-icon" class="fa-solid fa-play"></i>
+                                <span id="play-text">Play</span>
+                            </button>
+                            <button id="next-frame-btn" title="Next Frame" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1">
+                                <span>+1 Frame</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button id="jump-start-btn" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-medium rounded-lg border border-gray-700 transition-colors">
+                                <i class="fa-solid fa-backward-step mr-1"></i> Start
+                            </button>
+                            <button id="jump-last-btn" class="px-3.5 py-2 bg-accentPurple/20 hover:bg-accentPurple/30 text-accentPurple border border-accentPurple/40 text-xs font-semibold rounded-lg transition-colors flex items-center space-x-1">
+                                <i class="fa-solid fa-flag-checkered mr-1"></i>
+                                <span>Last Frame</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button: Extract Selected Frame -->
+                <div class="flex justify-center">
+                    <button id="capture-btn" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-accentBlue to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-camera text-lg"></i>
+                        <span>Capture Selected Frame</span>
+                    </button>
+                </div>
+
                 <canvas id="frame-canvas" class="hidden"></canvas>
 
                 <!-- Extraction Result Box -->
-                <div class="flex flex-col items-center justify-center space-y-4 pt-4 border-t border-gray-800">
-                    <div class="relative rounded-xl overflow-hidden border border-gray-800 max-h-80 shadow-lg bg-black">
-                        <img id="result-img" class="object-contain max-h-72 w-full" alt="Extracted Last Frame">
+                <div id="result-box" class="hidden flex flex-col items-center justify-center space-y-4 pt-6 border-t border-gray-800">
+                    <div class="flex items-center justify-between w-full">
+                        <h4 class="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center space-x-2">
+                            <i class="fa-solid fa-image text-accentBlue"></i>
+                            <span>Extracted Frame Preview</span>
+                        </h4>
+                        <!-- Format Selector -->
+                        <div class="flex items-center space-x-2 text-xs text-gray-400">
+                            <span>Format:</span>
+                            <select id="image-format" class="bg-gray-800 border border-gray-700 text-gray-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-accentBlue">
+                                <option value="image/png">PNG (High Quality)</option>
+                                <option value="image/jpeg">JPG (Smaller Size)</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <div class="relative rounded-xl overflow-hidden border border-gray-800 max-h-80 shadow-lg bg-black w-full flex justify-center">
+                        <img id="result-img" class="object-contain max-h-72 w-full" alt="Extracted Video Frame">
+                    </div>
+
                     <div class="flex flex-wrap gap-4 justify-center w-full">
-                        <button id="download-btn" class="flex-1 min-w-[200px] px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center space-x-2">
+                        <button id="download-btn" class="flex-1 min-w-[220px] px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-download"></i>
-                            <span>Download Last Frame</span>
+                            <span>Download Frame Image</span>
                         </button>
                     </div>
                 </div>
@@ -145,15 +214,40 @@
                 <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-accentPurple flex items-center justify-center mb-4">
                     <i class="fa-solid fa-bullseye"></i>
                 </div>
-                <h4 class="font-semibold text-gray-200 mb-2">Frame-Accurate</h4>
-                <p class="text-sm text-gray-400">Instantly seeks and retrieves the exact final frame for seamless AI continuation loops.</p>
+                <h4 class="font-semibold text-gray-200 mb-2">Frame-Accurate Control</h4>
+                <p class="text-sm text-gray-400">Use precise frame-stepping or jump straight to the exact final frame for AI loops.</p>
             </div>
             <div class="bg-cardBg/60 border border-gray-800 p-6 rounded-2xl">
                 <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4">
                     <i class="fa-solid fa-gauge-high"></i>
                 </div>
                 <h4 class="font-semibold text-gray-200 mb-2">Lightning Fast</h4>
-                <p class="text-sm text-gray-400">Zero server uploads mean instant extraction regardless of your connection speed.</p>
+                <p class="text-sm text-gray-400">Zero server uploads mean instant extraction regardless of your internet connection speed.</p>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div id="faq" class="w-full bg-cardBg/40 border border-gray-800 p-6 sm:p-8 rounded-2xl space-y-4">
+            <h3 class="text-xl font-bold text-white mb-4">Frequently Asked Questions</h3>
+            <div class="space-y-3 text-sm">
+                <details class="group border border-gray-800 rounded-xl bg-darkBg/60 p-4 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-medium text-gray-200 cursor-pointer">
+                        <span>How do I grab the exact last frame for AI tools like Runway or Kling?</span>
+                        <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs"></i></span>
+                    </summary>
+                    <p class="mt-3 text-gray-400 leading-relaxed">
+                        Simply upload your video and click the <strong>"Last Frame"</strong> button. The app automatically seeks to the final millisecond and lets you download the exact image to use as a starting frame for video continuation.
+                    </p>
+                </details>
+                <details class="group border border-gray-800 rounded-xl bg-darkBg/60 p-4 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex justify-between items-center font-medium text-gray-200 cursor-pointer">
+                        <span>Are my video files stored on any server?</span>
+                        <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs"></i></span>
+                    </summary>
+                    <p class="mt-3 text-gray-400 leading-relaxed">
+                        No. All video decoding and image rendering are handled locally in your web browser using HTML5 Canvas. Your privacy is 100% protected.
+                    </p>
+                </details>
             </div>
         </div>
 
@@ -164,7 +258,7 @@
         <p>&copy; 2026 LastFrameExtractor. All rights reserved.</p>
     </footer>
 
-    <!-- Frontend Extraction & Popunder Trigger Script -->
+    <!-- Frontend Script -->
     <script>
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('video-file-input');
@@ -172,16 +266,32 @@
         const fileNameEl = document.getElementById('file-name');
         const removeFileBtn = document.getElementById('remove-file');
         const sourceVideo = document.getElementById('source-video');
+        const timeSlider = document.getElementById('time-slider');
+        const currentTimeDisplay = document.getElementById('current-time-display');
+        const totalTimeDisplay = document.getElementById('total-time-display');
+        
+        const prevFrameBtn = document.getElementById('prev-frame-btn');
+        const nextFrameBtn = document.getElementById('next-frame-btn');
+        const togglePlayBtn = document.getElementById('toggle-play-btn');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+        const jumpStartBtn = document.getElementById('jump-start-btn');
+        const jumpLastBtn = document.getElementById('jump-last-btn');
+        
+        const captureBtn = document.getElementById('capture-btn');
+        const resultBox = document.getElementById('result-box');
         const frameCanvas = document.getElementById('frame-canvas');
         const resultImg = document.getElementById('result-img');
+        const imageFormatSelect = document.getElementById('image-format');
         const downloadBtn = document.getElementById('download-btn');
 
+        let isVideoPlaying = false;
+
+        // Drag & Drop Handlers
         dropZone.addEventListener('click', () => fileInput.click());
 
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleVideoFile(e.target.files[0]);
-            }
+            if (e.target.files.length > 0) handleVideoFile(e.target.files[0]);
         });
 
         dropZone.addEventListener('dragover', (e) => {
@@ -196,11 +306,18 @@
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('border-accentBlue', 'bg-accentBlue/5');
-            if (e.dataTransfer.files.length > 0) {
-                handleVideoFile(e.dataTransfer.files[0]);
-            }
+            if (e.dataTransfer.files.length > 0) handleVideoFile(e.dataTransfer.files[0]);
         });
 
+        // Time Formatting Helper (MM:SS.ms)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            const ms = Math.floor((seconds % 1) * 100);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+        }
+
+        // Process Selected Video
         function handleVideoFile(file) {
             if (!file.type.startsWith('video/')) {
                 alert('Please upload a valid video file.');
@@ -212,21 +329,113 @@
             
             dropZone.classList.add('hidden');
             previewContainer.classList.remove('hidden');
+            resultBox.classList.add('hidden');
 
             sourceVideo.onloadedmetadata = () => {
-                sourceVideo.currentTime = Math.max(0, sourceVideo.duration - 0.05);
-            };
-
-            sourceVideo.onseeked = () => {
-                frameCanvas.width = sourceVideo.videoWidth;
-                frameCanvas.height = sourceVideo.videoHeight;
-                const ctx = frameCanvas.getContext('2d');
-                ctx.drawImage(sourceVideo, 0, 0, frameCanvas.width, frameCanvas.height);
-                const dataURL = frameCanvas.toDataURL('image/png');
-                resultImg.src = dataURL;
+                timeSlider.max = sourceVideo.duration;
+                totalTimeDisplay.textContent = formatTime(sourceVideo.duration);
+                // Default seek to last frame on load
+                jumpToLastFrame();
             };
         }
 
+        // Jump to Last Frame Function
+        function jumpToLastFrame() {
+            if (!sourceVideo.duration) return;
+            sourceVideo.pause();
+            updatePlayState(false);
+            const lastFrameTime = Math.max(0, sourceVideo.duration - 0.05);
+            sourceVideo.currentTime = lastFrameTime;
+            timeSlider.value = lastFrameTime;
+            currentTimeDisplay.textContent = formatTime(lastFrameTime);
+        }
+
+        // Sync Slider & Controls while playing or seeking
+        sourceVideo.addEventListener('timeupdate', () => {
+            timeSlider.value = sourceVideo.currentTime;
+            currentTimeDisplay.textContent = formatTime(sourceVideo.currentTime);
+        });
+
+        timeSlider.addEventListener('input', () => {
+            sourceVideo.pause();
+            updatePlayState(false);
+            sourceVideo.currentTime = timeSlider.value;
+            currentTimeDisplay.textContent = formatTime(timeSlider.value);
+        });
+
+        // Play / Pause Toggle
+        togglePlayBtn.addEventListener('click', () => {
+            if (sourceVideo.paused) {
+                sourceVideo.play();
+                updatePlayState(true);
+            } else {
+                sourceVideo.pause();
+                updatePlayState(false);
+            }
+        });
+
+        function updatePlayState(playing) {
+            isVideoPlaying = playing;
+            if (playing) {
+                playIcon.className = "fa-solid fa-pause";
+                playText.textContent = "Pause";
+            } else {
+                playIcon.className = "fa-solid fa-play";
+                playText.textContent = "Play";
+            }
+        }
+
+        // Frame Stepping (-1 and +1 frame approx 0.04s for 25fps)
+        const FRAME_TIME = 0.04;
+
+        prevFrameBtn.addEventListener('click', () => {
+            sourceVideo.pause();
+            updatePlayState(false);
+            sourceVideo.currentTime = Math.max(0, sourceVideo.currentTime - FRAME_TIME);
+        });
+
+        nextFrameBtn.addEventListener('click', () => {
+            sourceVideo.pause();
+            updatePlayState(false);
+            sourceVideo.currentTime = Math.min(sourceVideo.duration, sourceVideo.currentTime + FRAME_TIME);
+        });
+
+        jumpStartBtn.addEventListener('click', () => {
+            sourceVideo.pause();
+            updatePlayState(false);
+            sourceVideo.currentTime = 0;
+        });
+
+        jumpLastBtn.addEventListener('click', jumpToLastFrame);
+
+        // Capture Frame Action
+        captureBtn.addEventListener('click', () => {
+            sourceVideo.pause();
+            updatePlayState(false);
+            renderCanvasFrame();
+        });
+
+        function renderCanvasFrame() {
+            frameCanvas.width = sourceVideo.videoWidth;
+            frameCanvas.height = sourceVideo.videoHeight;
+            const ctx = frameCanvas.getContext('2d');
+            ctx.drawImage(sourceVideo, 0, 0, frameCanvas.width, frameCanvas.height);
+            
+            const selectedFormat = imageFormatSelect.value;
+            const dataURL = frameCanvas.toDataURL(selectedFormat, 0.95);
+            resultImg.src = dataURL;
+            
+            resultBox.classList.remove('hidden');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        imageFormatSelect.addEventListener('change', () => {
+            if (!resultBox.classList.contains('hidden')) {
+                renderCanvasFrame();
+            }
+        });
+
+        // Download Action & Adsterra Popunder Trigger
         downloadBtn.addEventListener('click', () => {
             if (!resultImg.src) return;
 
@@ -240,19 +449,26 @@
                 console.log('Popunder triggered');
             }
 
-            // Proceed with image download
+            // Determine Extension
+            const format = imageFormatSelect.value;
+            const ext = format === 'image/jpeg' ? 'jpg' : 'png';
+
+            // Download file
             const a = document.createElement('a');
             a.href = resultImg.src;
-            a.download = 'last_frame.png';
+            a.download = `frame_${Math.floor(sourceVideo.currentTime * 1000)}ms.${ext}`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
         });
 
+        // Reset File Action
         removeFileBtn.addEventListener('click', () => {
+            sourceVideo.pause();
             sourceVideo.src = '';
             fileInput.value = '';
             resultImg.src = '';
+            resultBox.classList.add('hidden');
             previewContainer.classList.add('hidden');
             dropZone.classList.remove('hidden');
         });
