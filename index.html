@@ -19,7 +19,7 @@ async function handleRequest(request) {
 }
 
 // =========================================================
-// PÁGINA 1: EXTRACTOR DE FOTOGRAMAS (Tu código original mejorado)
+// PÁGINA 1: EXTRACTOR DE FOTOGRAMAS
 // =========================================================
 const htmlExtractorPage = `<!DOCTYPE html>
 <html lang="en" class="dark">
@@ -590,9 +590,8 @@ const htmlUpscalerPage = `<!DOCTYPE html>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
                 <a href="/" class="hover:text-white transition-colors">Extractor de Video</a>
                 
-                <!-- Tools Dropdown -->
                 <div class="relative group">
-                    <button class="flex items-center space-x-1 hover:text-white transition-colors py-2 focus:outline-none text-accentPurple font-semibold">
+                    <button class="flex items-center space-x-1 text-white transition-colors py-2 focus:outline-none">
                         <span>Herramientas</span>
                         <i class="fa-solid fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i>
                     </button>
@@ -602,25 +601,26 @@ const htmlUpscalerPage = `<!DOCTYPE html>
                             <i class="fa-solid fa-film text-accentBlue"></i>
                             <div>
                                 <div class="font-medium text-xs">Extraer Fotogramas</div>
-                                <div class="text-[10px] text-gray-400">Captura el último o cualquier frame</div>
+                                <div class="text-[10px] text-gray-400">Obtén el último cuadro de un video</div>
                             </div>
                         </a>
                         <a href="/upscaler" class="flex items-center space-x-3 px-4 py-2.5 hover:bg-gray-800/60 text-gray-200 hover:text-accentPurple transition-colors">
                             <i class="fa-solid fa-wand-magic-sparkles text-accentPurple"></i>
                             <div>
-                                <div class="font-medium text-xs">Escalar Imagen a 4K</div>
-                                <div class="text-[10px] text-gray-400">Aumenta nitidez con IA</div>
+                                <div class="font-medium text-xs">Aumentar a 4K con IA</div>
+                                <div class="text-[10px] text-gray-400">Mejora nitidez e imagen</div>
                             </div>
                         </a>
                     </div>
                 </div>
 
-                <a href="#about" class="hover:text-white transition-colors">¿Cómo funciona?</a>
+                <a href="#features" class="hover:text-white transition-colors">Características</a>
             </nav>
 
             <div class="flex items-center space-x-3">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-accentPurple border border-purple-500/20">
-                    <i class="fa-solid fa-sparkles mr-1.5"></i> IA Local
+                    <span class="w-1.5 h-1.5 rounded-full bg-accentPurple mr-1.5 animate-pulse"></span>
+                    AI Upscaler 4K
                 </span>
             </div>
         </div>
@@ -629,7 +629,7 @@ const htmlUpscalerPage = `<!DOCTYPE html>
     <!-- Main Container -->
     <main class="flex-grow flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-8 max-w-5xl mx-auto w-full space-y-8">
 
-        <!-- Adsterra Banner Slot (728x90) -->
+        <!-- Banner Adsterra (728x90) -->
         <div class="w-full bg-gray-900/60 border border-dashed border-gray-800 rounded-xl p-3 text-center text-xs text-gray-500 flex flex-col items-center justify-center min-h-[90px] overflow-hidden">
             <script type="text/javascript">
                 atOptions = {
@@ -645,192 +645,166 @@ const htmlUpscalerPage = `<!DOCTYPE html>
 
         <!-- Hero Section -->
         <div class="text-center space-y-4 max-w-3xl">
-            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
-                Escalar Imagen Gratis a <span class="text-transparent bg-clip-text bg-gradient-to-r from-accentPurple via-indigo-400 to-accentBlue">Calidad 4K con IA</span>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
+                Reescala tus Imágenes a <span class="text-transparent bg-clip-text bg-gradient-to-r from-accentPurple via-pink-400 to-accentBlue">Calidad 4K</span> con IA
             </h1>
-            <p class="text-base sm:text-lg text-gray-400">
-                Reescala tus imágenes o fotogramas al doble de resolución sin perder claridad — procesado localmente en tu propio dispositivo de forma 100% gratuita y sin registros.
+            <p class="text-lg text-gray-400">
+                Aumenta la resolución y nitidez de tus fotos o fotogramas de forma 100% local en tu navegador.
             </p>
-            
-            <!-- Badges -->
-            <div class="flex flex-wrap justify-center gap-3 pt-2">
-                <span class="px-3.5 py-1.5 rounded-full bg-gray-800/80 border border-gray-700 text-xs text-gray-300 flex items-center">
-                    <i class="fa-solid fa-circle-check text-emerald-400 mr-1.5"></i> 100% Gratis
-                </span>
-                <span class="px-3.5 py-1.5 rounded-full bg-gray-800/80 border border-gray-700 text-xs text-gray-300 flex items-center">
-                    <i class="fa-solid fa-shield-halved text-accentBlue mr-1.5"></i> Privacidad Completa
-                </span>
-                <span class="px-3.5 py-1.5 rounded-full bg-gray-800/80 border border-gray-700 text-xs text-gray-300 flex items-center">
-                    <i class="fa-solid fa-bolt text-amber-400 mr-1.5"></i> No Requiere Login
-                </span>
-            </div>
         </div>
 
-        <!-- Tool Card Box -->
+        <!-- Card principal -->
         <div class="w-full bg-cardBg border border-gray-800/80 rounded-2xl shadow-2xl p-6 sm:p-10 relative overflow-hidden backdrop-blur-sm">
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-accentPurple/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <!-- Drag & Drop Zone -->
-            <div id="img-drop-zone" class="border-2 border-dashed border-gray-700 hover:border-accentPurple/50 transition-all rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center cursor-pointer bg-darkBg/40 group">
+            <!-- Zona Dropzone -->
+            <div id="drop-zone" class="border-2 border-dashed border-gray-700 hover:border-accentPurple/50 transition-all rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center cursor-pointer bg-darkBg/40 group">
                 <div class="w-16 h-16 rounded-2xl bg-accentPurple/10 group-hover:bg-accentPurple/20 text-accentPurple flex items-center justify-center mb-4 transition-colors">
                     <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-200 mb-1">Arrastra o suelta tu imagen aquí</h3>
-                <p class="text-sm text-gray-400 mb-6">Soporta un archivo JPG, PNG o WebP</p>
-                <label class="px-6 py-3 bg-gradient-to-r from-accentPurple to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-purple-500/20 transition-all transform hover:-translate-y-0.5">
+                <h3 class="text-lg font-semibold text-gray-200 mb-1">Arrastra tu imagen aquí</h3>
+                <p class="text-sm text-gray-400 mb-6">Soporta PNG, JPG, WebP</p>
+                <label class="px-6 py-3 bg-accentPurple hover:bg-purple-600 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-purple-500/25 transition-all transform hover:-translate-y-0.5">
                     Seleccionar Imagen
-                    <input type="file" id="img-file-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+                    <input type="file" id="image-file-input" accept="image/png,image/jpeg,image/webp" class="hidden">
                 </label>
             </div>
 
-            <!-- Loader & Progress Area -->
-            <div id="processing-state" class="hidden flex flex-col items-center justify-center py-12 space-y-4">
-                <div class="w-12 h-12 border-4 border-accentPurple/20 border-t-accentPurple rounded-full animate-spin"></div>
-                <p id="status-text" class="text-sm font-medium text-gray-300">Cargando modelo de Inteligencia Artificial...</p>
-                <p class="text-xs text-gray-500">Esto se procesa en tu dispositivo. Puede tardar unos segundos.</p>
-            </div>
-
-            <!-- Result Preview Area -->
-            <div id="img-result-container" class="hidden space-y-6">
+            <!-- Área de vista previa y proceso -->
+            <div id="process-container" class="hidden space-y-6">
                 <div class="flex items-center justify-between bg-darkBg/60 p-4 rounded-xl border border-gray-800">
-                    <span id="img-info" class="text-xs font-mono text-gray-300">Imagen reescalada exitosamente</span>
-                    <button id="reset-img-btn" class="text-gray-400 hover:text-red-400 text-xs px-3 py-1.5 rounded-lg bg-gray-800">
-                        <i class="fa-solid fa-rotate-left mr-1"></i> Subir Otra
+                    <span id="image-name" class="text-sm font-medium text-gray-300 truncate">imagen.png</span>
+                    <button id="reset-btn" class="text-gray-500 hover:text-red-400 text-sm px-3 py-1 rounded-lg bg-gray-800/50">
+                        Cambiar Imagen
                     </button>
                 </div>
 
-                <div class="relative rounded-xl overflow-hidden border border-gray-800 bg-black flex justify-center items-center">
-                    <img id="upscaled-image-output" class="max-h-[450px] w-auto object-contain" alt="Imagen Reescalada 4K">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <span class="text-xs text-gray-400 font-medium">Original</span>
+                        <div class="rounded-xl overflow-hidden border border-gray-800 bg-black flex justify-center items-center h-64">
+                            <img id="input-img-preview" class="max-h-full object-contain" alt="Original">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-xs text-gray-400 font-medium">Resultado Mejora IA</span>
+                        <div class="rounded-xl overflow-hidden border border-gray-800 bg-black flex justify-center items-center h-64 relative">
+                            <div id="loading-spinner" class="hidden flex-col items-center space-y-2 text-accentPurple">
+                                <i class="fa-solid fa-spinner fa-spin text-3xl"></i>
+                                <span class="text-xs font-medium" id="progress-text">Procesando IA...</span>
+                            </div>
+                            <img id="output-img-preview" class="max-h-full object-contain hidden" alt="Resultado">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex justify-center">
-                    <button id="download-upscaled-btn" class="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center space-x-2">
+                <div class="flex justify-center pt-2">
+                    <button id="upscale-btn" class="px-8 py-3.5 bg-gradient-to-r from-accentPurple to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/25 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Aumentar Resolución a 4K</span>
+                    </button>
+                    <button id="download-upscaled-btn" class="hidden px-8 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/25 transition-all flex items-center space-x-2">
                         <i class="fa-solid fa-download"></i>
-                        <span>Descargar Imagen Escalada en HD/4K</span>
+                        <span>Descargar Imagen 4K</span>
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- SEO Informative Section -->
-        <div id="about" class="w-full bg-cardBg/40 border border-gray-800 p-6 sm:p-8 rounded-2xl space-y-6">
-            <h2 class="text-2xl font-bold text-white">¿Por qué reescalar tus imágenes y fotogramas con IA?</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-300">
-                <div class="space-y-2">
-                    <h3 class="font-semibold text-accentPurple text-base"><i class="fa-solid fa-microchip mr-2"></i>Reconstrucción por IA</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        A diferencia del escalado tradicional que deforma o pixela la imagen, la red neuronal analiza las texturas y líneas para generar nuevos píxeles nítidos en segundos.
-                    </p>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="font-semibold text-accentBlue text-base"><i class="fa-solid fa-clapperboard mr-2"></i>Optimizado para Creadores de Video e IA</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Si capturas el último fotograma de un video para usarlo como referencia en herramientas como Runway, Kling o Sora, escalarlo a 4K garantiza una continuación con mucha mayor calidad visual.
-                    </p>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-gray-800 bg-darkBg/80 mt-12 py-8 text-center text-sm text-gray-500">
-        <p>&copy; 2026 LastFrameExtractor. All rights reserved.</p>
+        <p>&copy; 2026 LastFrameExtractor. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Upscaler Script -->
     <script>
-        const imgDropZone = document.getElementById('img-drop-zone');
-        const imgFileInput = document.getElementById('img-file-input');
-        const processingState = document.getElementById('processing-state');
-        const statusText = document.getElementById('status-text');
-        const imgResultContainer = document.getElementById('img-result-container');
-        const upscaledImageOutput = document.getElementById('upscaled-image-output');
-        const imgInfo = document.getElementById('img-info');
-        const downloadUpscaledBtn = document.getElementById('download-upscaled-btn');
-        const resetImgBtn = document.getElementById('reset-img-btn');
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('image-file-input');
+        const processContainer = document.getElementById('process-container');
+        const imageName = document.getElementById('image-name');
+        const resetBtn = document.getElementById('reset-btn');
+        const inputImg = document.getElementById('input-img-preview');
+        const outputImg = document.getElementById('output-img-preview');
+        const upscaleBtn = document.getElementById('upscale-btn');
+        const downloadBtn = document.getElementById('download-upscaled-btn');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const progressText = document.getElementById('progress-text');
 
-        let upscalerInstance = null;
+        let upscaler = null;
+        let selectedFile = null;
 
-        imgDropZone.addEventListener('click', () => imgFileInput.click());
+        dropZone.addEventListener('click', () => fileInput.click());
 
-        imgFileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) processImageFile(e.target.files[0]);
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) loadImage(e.target.files[0]);
         });
 
-        // Drag & drop handlers
-        imgDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imgDropZone.classList.add('border-accentPurple', 'bg-accentPurple/5');
-        });
+        function loadImage(file) {
+            selectedFile = file;
+            imageName.textContent = file.name;
+            const url = URL.createObjectURL(file);
+            inputImg.src = url;
 
-        imgDropZone.addEventListener('dragleave', () => {
-            imgDropZone.classList.remove('border-accentPurple', 'bg-accentPurple/5');
-        });
-
-        imgDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            imgDropZone.classList.remove('border-accentPurple', 'bg-accentPurple/5');
-            if (e.dataTransfer.files.length > 0) processImageFile(e.dataTransfer.files[0]);
-        });
-
-        async function processImageFile(file) {
-            imgDropZone.classList.add('hidden');
-            processingState.classList.remove('hidden');
-            statusText.textContent = "Cargando modelo de IA en el navegador...";
-
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-
-            img.onload = async () => {
-                try {
-                    statusText.textContent = "Mejorando resolución y nitidez a 4K...";
-                    
-                    if (!upscalerInstance) {
-                        upscalerInstance = new Upscaler();
-                    }
-
-                    const upscaledSrc = await upscalerInstance.upscale(img);
-                    
-                    upscaledImageOutput.src = upscaledSrc;
-                    imgInfo.textContent = \`Original: \${img.width}x\${img.height}px  ➞  Escalada con IA\`;
-
-                    processingState.classList.add('hidden');
-                    imgResultContainer.classList.remove('hidden');
-                } catch (err) {
-                    alert("Ocurrió un error al procesar la imagen. Intenta con un archivo más pequeño.");
-                    console.error(err);
-                    processingState.classList.add('hidden');
-                    imgDropZone.classList.remove('hidden');
-                }
-            };
+            dropZone.classList.add('hidden');
+            processContainer.classList.remove('hidden');
+            outputImg.classList.add('hidden');
+            downloadBtn.classList.add('hidden');
+            upscaleBtn.classList.remove('hidden');
         }
 
-        // Descarga + Popunder Monetización Adsterra
-        downloadUpscaledBtn.addEventListener('click', () => {
-            if (!upscaledImageOutput.src) return;
+        resetBtn.addEventListener('click', () => {
+            processContainer.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            fileInput.value = '';
+            inputImg.src = '';
+            outputImg.src = '';
+        });
 
+        upscaleBtn.addEventListener('click', async () => {
+            if (!inputImg.src) return;
+
+            upscaleBtn.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            loadingSpinner.classList.add('flex');
+
+            try {
+                if (!upscaler) {
+                    progressText.textContent = "Cargando modelo de IA...";
+                    upscaler = new Upscaler();
+                }
+
+                progressText.textContent = "Mejorando calidad de la imagen...";
+                const upscaledSrc = await upscaler.upscale(inputImg);
+
+                outputImg.src = upscaledSrc;
+                loadingSpinner.classList.add('hidden');
+                loadingSpinner.classList.remove('flex');
+                outputImg.classList.remove('hidden');
+                downloadBtn.classList.remove('hidden');
+            } catch (error) {
+                alert('Error al procesar la imagen: ' + error.message);
+                loadingSpinner.classList.add('hidden');
+                loadingSpinner.classList.remove('flex');
+                upscaleBtn.classList.remove('hidden');
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!outputImg.src) return;
+
+            // Disparar popunder publicitario
             try {
                 const popScript = document.createElement('script');
                 popScript.setAttribute('data-cfasync', 'false');
                 popScript.src = 'https://abscloud.org/1/25fff96bdb25dfcca033fe37a12a2f9a';
                 document.body.appendChild(popScript);
-            } catch (err) {}
+            } catch (e) {}
 
             const a = document.createElement('a');
-            a.href = upscaledImageOutput.src;
-            a.download = 'imagen_escalada_4k.png';
+            a.href = outputImg.src;
+            a.download = 'imagen_4k_upscaled.png';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-        });
-
-        resetImgBtn.addEventListener('click', () => {
-            imgFileInput.value = '';
-            upscaledImageOutput.src = '';
-            imgResultContainer.classList.add('hidden');
-            imgDropZone.classList.remove('hidden');
         });
     </script>
 </body>
