@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frame extractor - Extract any frame from your video Instantly</title>
     <meta name="description" content="Free online tool to extract exact frames or the final last frame from any MP4, MOV, or WebM video. Perfect for AI video creators (Runway, Kling, Sora) and editors.">
-    <meta name="keywords" content="extract last frame from video, video frame grabber, last frame extractor, AI video reference frame, get last frame mp4, video to frame converter">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +27,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Adsterra Social Bar Script -->
-    <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
+    <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25" onerror="console.log('Ad script blocked');"></script>
 </head>
 <body class="bg-darkBg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-accentBlue selection:text-white">
 
@@ -59,7 +58,7 @@
             </p>
         </div>
 
-        <!-- Adsterra Banner Slot (Reubicado justo antes de la herramienta) -->
+        <!-- Adsterra Banner Slot -->
         <div class="w-full bg-gray-900/60 border border-dashed border-gray-800 rounded-xl p-3 text-center text-xs text-gray-500 flex flex-col items-center justify-center min-h-[90px] overflow-hidden">
             <script type="text/javascript">
                 atOptions = {
@@ -70,7 +69,7 @@
                     'params' : {}
                 };
             </script>
-            <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
+            <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25" onerror="console.log('Banner ad blocked');"></script>
         </div>
 
         <!-- Tool Card Box -->
@@ -84,7 +83,7 @@
                     <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-200 mb-1">Drag & drop your video here</h3>
-                <p class="text-sm text-gray-400 mb-6">Supports MP4, MOV, WebM (Max 500MB)</p>
+                <p class="text-sm text-gray-400 mb-6">Supports MP4, MOV, WebM (Standard H.264 / VP8 / VP9 codecs recommended)</p>
                 <label class="px-6 py-3 bg-accentBlue hover:bg-blue-600 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
                     Browse Files
                     <input type="file" id="video-file-input" accept="video/mp4,video/quicktime,video/webm" class="hidden">
@@ -105,8 +104,11 @@
                 </div>
 
                 <!-- Video Player Preview -->
-                <div class="relative rounded-xl overflow-hidden border border-gray-800 shadow-2xl bg-black flex justify-center items-center">
+                <div class="relative rounded-xl overflow-hidden border border-gray-800 shadow-2xl bg-black flex justify-center items-center min-h-[240px]">
                     <video id="source-video" class="max-h-[420px] w-auto mx-auto" preload="auto" playsinline></video>
+                    <div id="loading-spinner" class="absolute inset-0 flex items-center justify-center bg-black/60 hidden">
+                        <i class="fa-solid fa-spinner fa-spin text-accentBlue text-3xl"></i>
+                    </div>
                 </div>
 
                 <!-- Interactive Player Timeline Controls -->
@@ -145,6 +147,36 @@
                                 <i class="fa-solid fa-flag-checkered mr-1"></i>
                                 <span>Last Frame</span>
                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SELECTOR DE RANGO / RECORTE DE VIDEO (NUEVO / RECUPERADO) -->
+                <div class="bg-darkBg/80 p-5 rounded-xl border border-gray-800 space-y-4">
+                    <h4 class="text-sm font-semibold text-gray-300 flex items-center space-x-2">
+                        <i class="fa-solid fa-scissors text-accentBlue"></i>
+                        <span>Seleccionar Rango / Parte del Video (Trim)</span>
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>Inicio de Sección:</span>
+                                <span id="trim-start-display" class="font-mono text-accentBlue">00:00.00</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <input type="range" id="trim-start-slider" min="0" value="0" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentBlue">
+                                <button id="set-start-here" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 rounded border border-gray-700 whitespace-nowrap">Marcar Aquí</button>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>Fin de Sección:</span>
+                                <span id="trim-end-display" class="font-mono text-accentPurple">00:00.00</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <input type="range" id="trim-end-slider" min="0" value="0" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentPurple">
+                                <button id="set-end-here" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-xs text-gray-300 rounded border border-gray-700 whitespace-nowrap">Marcar Aquí</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,20 +253,11 @@
             <div class="space-y-3 text-sm">
                 <details class="group border border-gray-800 rounded-xl bg-darkBg/60 p-4 [&_summary::-webkit-details-marker]:hidden">
                     <summary class="flex justify-between items-center font-medium text-gray-200 cursor-pointer">
-                        <span>How do I grab the exact last frame for AI tools like Runway or Kling?</span>
+                        <span>How do I use the video trim selection bar?</span>
                         <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs"></i></span>
                     </summary>
                     <p class="mt-3 text-gray-400 leading-relaxed">
-                        Simply upload your video and click the <strong>"Last Frame"</strong> button. The app automatically seeks to the final millisecond and lets you download the exact image to use as a starting frame for video continuation.
-                    </p>
-                </details>
-                <details class="group border border-gray-800 rounded-xl bg-darkBg/60 p-4 [&_summary::-webkit-details-marker]:hidden">
-                    <summary class="flex justify-between items-center font-medium text-gray-200 cursor-pointer">
-                        <span>Are my video files stored on any server?</span>
-                        <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down text-xs"></i></span>
-                    </summary>
-                    <p class="mt-3 text-gray-400 leading-relaxed">
-                        No. All video decoding and image rendering are handled locally in your web browser using HTML5 Canvas. Your privacy is 100% protected.
+                        The trim section allows you to define a specific segment range of your video. You can drag the start and end sliders or click "Marcar Aquí" while playing the video to isolate the exact chunk you want to inspect.
                     </p>
                 </details>
             </div>
@@ -243,4 +266,39 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-80
+    <footer class="border-t border-gray-800 bg-darkBg/80 mt-12 py-8 text-center text-sm text-gray-500">
+        <p>&copy; 2026 LastFrameExtractor. All rights reserved.</p>
+    </footer>
+
+    <!-- Frontend Script -->
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('video-file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const fileNameEl = document.getElementById('file-name');
+        const removeFileBtn = document.getElementById('remove-file');
+        const sourceVideo = document.getElementById('source-video');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const timeSlider = document.getElementById('time-slider');
+        const currentTimeDisplay = document.getElementById('current-time-display');
+        const totalTimeDisplay = document.getElementById('total-time-display');
+        
+        const prevFrameBtn = document.getElementById('prev-frame-btn');
+        const nextFrameBtn = document.getElementById('next-frame-btn');
+        const togglePlayBtn = document.getElementById('toggle-play-btn');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+        const jumpStartBtn = document.getElementById('jump-start-btn');
+        const jumpLastBtn = document.getElementById('jump-last-btn');
+
+        // Trim Elements
+        const trimStartSlider = document.getElementById('trim-start-slider');
+        const trimEndSlider = document.getElementById('trim-end-slider');
+        const trimStartDisplay = document.getElementById('trim-start-display');
+        const trimEndDisplay = document.getElementById('trim-end-display');
+        const setStartHereBtn = document.getElementById('set-start-here');
+        const setEndHereBtn = document.getElementById('set-end-here');
+        
+        const captureBtn = document.getElementById('capture-btn');
+        const resultBox = document.getElementById('result-box');
+        const frameCanvas = document.
