@@ -48,12 +48,7 @@
                 <a href="#features" class="hover:text-white transition-colors">Features</a>
                 <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
             </nav>
-            <div class="flex items-center space-x-3">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-accentBlue border border-blue-500/20">
-                    <span class="w-1.5 h-1.5 rounded-full bg-accentBlue mr-1.5 animate-pulse"></span>
-                    v2.0 Enhanced
-                </span>
-            </div>
+            <div class="w-10"></div> <!-- Espaciador para equilibrar el diseño de la navbar -->
         </div>
     </header>
 
@@ -90,4 +85,82 @@
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-accentPurple/10 rounded-full blur-3xl pointer-events-none"></div>
 
             <!-- Drag & Drop Zone -->
-            <div id
+            <div id="drop-zone" class="border-2 border-dashed border-gray-700 hover:border-accentBlue/50 transition-all rounded-xl p-8 sm:p-12 text-center flex flex-col items-center justify-center cursor-pointer bg-darkBg/40 group">
+                <div class="w-16 h-16 rounded-2xl bg-accentBlue/10 group-hover:bg-accentBlue/20 text-accentBlue flex items-center justify-center mb-4 transition-colors">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-200 mb-1">Drag & drop your video here</h3>
+                <p class="text-sm text-gray-400 mb-6">Supports MP4, MOV, WebM (Max 500MB)</p>
+                <label class="px-6 py-3 bg-accentBlue hover:bg-blue-600 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
+                    Browse Files
+                    <input type="file" id="video-file-input" accept="video/mp4,video/quicktime,video/webm" class="hidden">
+                </label>
+            </div>
+
+            <!-- Video Processing & Selector Area (Hidden by default) -->
+            <div id="preview-container" class="hidden space-y-6">
+                <!-- Header Status -->
+                <div class="flex items-center justify-between bg-darkBg/60 p-4 rounded-xl border border-gray-800">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <i class="fa-solid fa-file-video text-accentBlue text-xl"></i>
+                        <span id="file-name" class="text-sm font-medium text-gray-300 truncate">video.mp4</span>
+                    </div>
+                    <button id="remove-file" class="text-gray-500 hover:text-red-400 transition-colors text-sm px-3 py-1.5 rounded-lg bg-gray-800/50 hover:bg-red-500/10">
+                        <i class="fa-solid fa-trash-can mr-1.5"></i> Change Video
+                    </button>
+                </div>
+
+                <!-- Video Player Preview -->
+                <div class="relative rounded-xl overflow-hidden border border-gray-800 shadow-2xl bg-black flex justify-center items-center">
+                    <video id="source-video" class="max-h-[420px] w-auto mx-auto" preload="auto" playsinline></video>
+                </div>
+
+                <!-- Interactive Player Timeline Controls -->
+                <div class="bg-darkBg/80 p-5 rounded-xl border border-gray-800 space-y-4">
+                    <!-- Timeline Slider & Time Display -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs font-mono text-gray-400">
+                            <span id="current-time-display">00:00.00</span>
+                            <span id="total-time-display">00:00.00</span>
+                        </div>
+                        <input type="range" id="time-slider" min="0" value="0" step="0.01" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-accentBlue">
+                    </div>
+
+                    <!-- Fine Control Buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <div class="flex items-center space-x-2">
+                            <button id="prev-frame-btn" title="Previous Frame" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <span>-1 Frame</span>
+                            </button>
+                            <button id="toggle-play-btn" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1.5">
+                                <i id="play-icon" class="fa-solid fa-play"></i>
+                                <span id="play-text">Play</span>
+                            </button>
+                            <button id="next-frame-btn" title="Next Frame" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-medium rounded-lg border border-gray-700 transition-colors flex items-center space-x-1">
+                                <span>+1 Frame</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button id="jump-start-btn" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-medium rounded-lg border border-gray-700 transition-colors">
+                                <i class="fa-solid fa-backward-step mr-1"></i> Start
+                            </button>
+                            <button id="jump-last-btn" class="px-3.5 py-2 bg-accentPurple/20 hover:bg-accentPurple/30 text-accentPurple border border-accentPurple/40 text-xs font-semibold rounded-lg transition-colors flex items-center space-x-1">
+                                <i class="fa-solid fa-flag-checkered mr-1"></i>
+                                <span>Last Frame</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button: Extract Selected Frame -->
+                <div class="flex justify-center">
+                    <button id="capture-btn" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-accentBlue to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-camera text-lg"></i>
+                        <span>Capture Selected Frame</span>
+                    </button>
+                </div>
+
+                <canvas id="frame-canvas" class="hidden"></canvas>
