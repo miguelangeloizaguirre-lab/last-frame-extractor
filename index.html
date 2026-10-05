@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>Frame Extractor - Mobile & HD Video Snapshot Tool</title>
+    <title>Extractor Frame - Mobile & HD Video Snapshot Tool</title>
 
     <!-- FAVICON (Inline SVG data URI for dark theme camera motif) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0f19'/%3E%3Ccircle cx='32' cy='32' r='24' fill='%23131b2e' stroke='%2306b6d4' stroke-width='3'/%3E%3Cpath d='M20 24h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4V28a4 4 0 0 1 4-4z' fill='%2306b6d4'/%3E%3Ccircle cx='32' cy='36' r='7' fill='%230b0f19'/%3E%3Ccircle cx='32' cy='36' r='4' fill='%23f59e0b'/%3E%3Ccircle cx='40' cy='28' r='1.5' fill='%23ffffff'/%3E%3C/svg%3E">
@@ -174,7 +174,7 @@
                 </div>
                 <div>
                     <span class="text-base sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
-                        Frame<span class="text-cyan-400">Extractor</span>
+                        Extractor<span class="text-cyan-400">Frame</span>
                         <span class="text-[9px] sm:text-[10px] uppercase font-mono tracking-widest bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-1 py-0.5 rounded">Pro 4K</span>
                     </span>
                     <p class="text-[10px] sm:text-[11px] text-slate-400 hidden sm:block">Client-Side HD Video Frame Extractor & Snapshot Tool</p>
@@ -505,7 +505,7 @@
                                 <i id="faq1Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
                             </button>
                             <div id="faq1" class="hidden px-3 pb-3 text-[11px] sm:text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
-                                Yes! Frame Extractor is fully optimized for iOS Safari, Chrome, and Android browsers. Video decoding happens entirely inside your phone memory.
+                                Yes! Extractor Frame is fully optimized for iOS Safari, Chrome, and Android browsers. Video decoding happens entirely inside your phone memory.
                             </div>
                         </div>
 
@@ -587,10 +587,10 @@
             <div class="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-film text-cyan-400 text-base"></i>
-                    <span class="font-bold text-white text-sm">Frame Extractor</span>
+                    <span class="font-bold text-white text-sm">Extractor Frame</span>
                 </div>
                 <span class="text-slate-700 hidden sm:inline">|</span>
-                <span class="text-[11px] sm:text-xs">© 2026 Frame Extractor Studio. All rights reserved.</span>
+                <span class="text-[11px] sm:text-xs">© 2026 Extractor Frame Studio. All rights reserved.</span>
             </div>
 
             <!-- Footer Legal Trigger Buttons -->
@@ -630,11 +630,33 @@
             <h3 class="text-base sm:text-lg font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Privacy Policy</h3>
             <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
                 <p><strong>Effective Date: October 2026</strong></p>
-                <p>At Frame Extractor, user privacy and data security are paramount.</p>
+                <p>At Extractor Frame, user privacy and data security are paramount.</p>
                 <h4 class="font-bold text-white text-xs sm:text-sm">1. Client-Side Processing Guarantee</h4>
                 <p>All video rendering and frame decoding processes are executed locally on your device. <strong>No video or image data is ever uploaded to any server.</strong></p>
                 <h4 class="font-bold text-white text-xs sm:text-sm">2. Third-Party Advertising</h4>
                 <p>We work with third-party ad networks (AdSterra) to serve ads according to standard internet advertising policies.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS OF SERVICE MODAL -->
+    <div id="termsModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeModal('termsModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-cyan-400"></i> Terms of Service</h3>
+            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                <p>Extractor Frame is provided for legal media frame extraction. Users are responsible for ensuring they hold proper authorization for processed video content.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COOKIE POLICY MODAL -->
+    <div id="cookieModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeModal('cookieModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base sm:text-lg font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-cookie-bite text-amber-500"></i> Cookie Policy</h3>
+            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                <p>Extractor Frame uses cookies strictly for storing essential user choices and support for advertising networks.</p>
             </div>
         </div>
     </div>
@@ -1035,7 +1057,7 @@
             if (!frame) return;
 
             const safeStamp = frame.timestamp.replace(/[:.]/g, '-');
-            const fileName = `FrameExtractor_${safeStamp}.${frame.format.toLowerCase()}`;
+            const fileName = `ExtractorFrame_${safeStamp}.${frame.format.toLowerCase()}`;
 
             const a = document.createElement('a');
             a.href = frame.dataUrl;
@@ -1067,12 +1089,12 @@
 
             try {
                 const zip = new JSZip();
-                const folder = zip.folder("FrameExtractor_Export");
+                const folder = zip.folder("ExtractorFrame_Export");
 
                 capturedFrames.forEach((frame, idx) => {
                     const safeStamp = frame.timestamp.replace(/[:.]/g, '-');
                     const base64Data = frame.dataUrl.split(',')[1];
-                    const fileName = `FrameExtractor_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
+                    const fileName = `ExtractorFrame_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
                     folder.file(fileName, base64Data, { base64: true });
                 });
 
@@ -1081,7 +1103,7 @@
 
                 const a = document.createElement('a');
                 a.href = zipUrl;
-                a.download = `FrameExtractor_Collection_${Date.now()}.zip`;
+                a.download = `ExtractorFrame_Collection_${Date.now()}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1152,11 +1174,11 @@
 
         btnAcceptCookies.addEventListener('click', () => {
             cookieBanner.classList.add('translate-y-full');
-            localStorage.setItem('frame_extractor_cookies_accepted', 'true');
+            localStorage.setItem('extractor_frame_cookies_accepted', 'true');
         });
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('frame_extractor_cookies_accepted') === 'true') {
+            if (localStorage.getItem('extractor_frame_cookies_accepted') === 'true' || localStorage.getItem('frame_extractor_cookies_accepted') === 'true') {
                 cookieBanner.classList.add('translate-y-full');
             }
         });
