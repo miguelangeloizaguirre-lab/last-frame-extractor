@@ -40,8 +40,7 @@
                     <i class="fa-solid fa-film text-white text-lg"></i>
                 </div>
                 <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-    <span class="text-accentBlue">Frame</span>Extractor
-</span>
+                    <span class="text-accentBlue">Frame</span>Extractor
                 </span>
             </div>
         </div>
@@ -50,7 +49,17 @@
     <!-- Main Container -->
     <main class="flex-grow flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-8 max-w-5xl mx-auto w-full space-y-8">
 
-        <!-- Adsterra Banner Slot (728x90) -->
+        <!-- Hero Section -->
+        <div class="text-center space-y-4 max-w-3xl">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight text-center max-w-4xl mx-auto leading-tight">
+                Extract <span class="text-accentBlue">Any Frame</span> from Your <span class="bg-gradient-to-r from-accentBlue via-indigo-400 to-accentPurple bg-clip-text text-transparent">Video in Seconds</span>
+            </h1>
+            <p class="text-lg text-gray-400">
+                Browser-based video frame grabber for editors & AI video creators (Runway, Kling, Sora). Pick exact frames or grab the ending frame with precision.
+            </p>
+        </div>
+
+        <!-- Adsterra Banner Slot (Reubicado justo antes de la herramienta) -->
         <div class="w-full bg-gray-900/60 border border-dashed border-gray-800 rounded-xl p-3 text-center text-xs text-gray-500 flex flex-col items-center justify-center min-h-[90px] overflow-hidden">
             <script type="text/javascript">
                 atOptions = {
@@ -62,16 +71,6 @@
                 };
             </script>
             <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
-        </div>
-
-        <!-- Hero Section -->
-        <div class="text-center space-y-4 max-w-3xl">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight text-center max-w-4xl mx-auto leading-tight">
-    Extract <span class="text-accentBlue">Any Frame</span> from Your <span class="bg-gradient-to-r from-accentBlue via-indigo-400 to-accentPurple bg-clip-text text-transparent">Video in Seconds</span>
-</h1>
-            <p class="text-lg text-gray-400">
-                Browser-based video frame grabber for editors & AI video creators (Runway, Kling, Sora). Pick exact frames or grab the ending frame with precision.
-            </p>
         </div>
 
         <!-- Tool Card Box -->
@@ -244,224 +243,4 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-800 bg-darkBg/80 mt-12 py-8 text-center text-sm text-gray-500">
-        <p>&copy; 2026 LastFrameExtractor. All rights reserved.</p>
-    </footer>
-
-    <!-- Frontend Script -->
-    <script>
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('video-file-input');
-        const previewContainer = document.getElementById('preview-container');
-        const fileNameEl = document.getElementById('file-name');
-        const removeFileBtn = document.getElementById('remove-file');
-        const sourceVideo = document.getElementById('source-video');
-        const timeSlider = document.getElementById('time-slider');
-        const currentTimeDisplay = document.getElementById('current-time-display');
-        const totalTimeDisplay = document.getElementById('total-time-display');
-        
-        const prevFrameBtn = document.getElementById('prev-frame-btn');
-        const nextFrameBtn = document.getElementById('next-frame-btn');
-        const togglePlayBtn = document.getElementById('toggle-play-btn');
-        const playIcon = document.getElementById('play-icon');
-        const playText = document.getElementById('play-text');
-        const jumpStartBtn = document.getElementById('jump-start-btn');
-        const jumpLastBtn = document.getElementById('jump-last-btn');
-        
-        const captureBtn = document.getElementById('capture-btn');
-        const resultBox = document.getElementById('result-box');
-        const frameCanvas = document.getElementById('frame-canvas');
-        const resultImg = document.getElementById('result-img');
-        const imageFormatSelect = document.getElementById('image-format');
-        const downloadBtn = document.getElementById('download-btn');
-
-        let isVideoPlaying = false;
-
-        // Drag & Drop Handlers
-        dropZone.addEventListener('click', () => fileInput.click());
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) handleVideoFile(e.target.files[0]);
-        });
-
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('border-accentBlue', 'bg-accentBlue/5');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('border-accentBlue', 'bg-accentBlue/5');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('border-accentBlue', 'bg-accentBlue/5');
-            if (e.dataTransfer.files.length > 0) handleVideoFile(e.dataTransfer.files[0]);
-        });
-
-        // Time Formatting Helper (MM:SS.ms)
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            const ms = Math.floor((seconds % 1) * 100);
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
-        }
-
-        // Process Selected Video
-        function handleVideoFile(file) {
-            if (!file.type.startsWith('video/')) {
-                alert('Please upload a valid video file.');
-                return;
-            }
-            fileNameEl.textContent = file.name;
-            const fileURL = URL.createObjectURL(file);
-            sourceVideo.src = fileURL;
-            
-            dropZone.classList.add('hidden');
-            previewContainer.classList.remove('hidden');
-            resultBox.classList.add('hidden');
-
-            sourceVideo.onloadedmetadata = () => {
-                timeSlider.max = sourceVideo.duration;
-                totalTimeDisplay.textContent = formatTime(sourceVideo.duration);
-                // Default seek to last frame on load
-                jumpToLastFrame();
-            };
-        }
-
-        // Jump to Last Frame Function
-        function jumpToLastFrame() {
-            if (!sourceVideo.duration) return;
-            sourceVideo.pause();
-            updatePlayState(false);
-            const lastFrameTime = Math.max(0, sourceVideo.duration - 0.05);
-            sourceVideo.currentTime = lastFrameTime;
-            timeSlider.value = lastFrameTime;
-            currentTimeDisplay.textContent = formatTime(lastFrameTime);
-        }
-
-        // Sync Slider & Controls while playing or seeking
-        sourceVideo.addEventListener('timeupdate', () => {
-            timeSlider.value = sourceVideo.currentTime;
-            currentTimeDisplay.textContent = formatTime(sourceVideo.currentTime);
-        });
-
-        timeSlider.addEventListener('input', () => {
-            sourceVideo.pause();
-            updatePlayState(false);
-            sourceVideo.currentTime = timeSlider.value;
-            currentTimeDisplay.textContent = formatTime(timeSlider.value);
-        });
-
-        // Play / Pause Toggle
-        togglePlayBtn.addEventListener('click', () => {
-            if (sourceVideo.paused) {
-                sourceVideo.play();
-                updatePlayState(true);
-            } else {
-                sourceVideo.pause();
-                updatePlayState(false);
-            }
-        });
-
-        function updatePlayState(playing) {
-            isVideoPlaying = playing;
-            if (playing) {
-                playIcon.className = "fa-solid fa-pause";
-                playText.textContent = "Pause";
-            } else {
-                playIcon.className = "fa-solid fa-play";
-                playText.textContent = "Play";
-            }
-        }
-
-        // Frame Stepping (-1 and +1 frame approx 0.04s for 25fps)
-        const FRAME_TIME = 0.04;
-
-        prevFrameBtn.addEventListener('click', () => {
-            sourceVideo.pause();
-            updatePlayState(false);
-            sourceVideo.currentTime = Math.max(0, sourceVideo.currentTime - FRAME_TIME);
-        });
-
-        nextFrameBtn.addEventListener('click', () => {
-            sourceVideo.pause();
-            updatePlayState(false);
-            sourceVideo.currentTime = Math.min(sourceVideo.duration, sourceVideo.currentTime + FRAME_TIME);
-        });
-
-        jumpStartBtn.addEventListener('click', () => {
-            sourceVideo.pause();
-            updatePlayState(false);
-            sourceVideo.currentTime = 0;
-        });
-
-        jumpLastBtn.addEventListener('click', jumpToLastFrame);
-
-        // Capture Frame Action
-        captureBtn.addEventListener('click', () => {
-            sourceVideo.pause();
-            updatePlayState(false);
-            renderCanvasFrame();
-        });
-
-        function renderCanvasFrame() {
-            frameCanvas.width = sourceVideo.videoWidth;
-            frameCanvas.height = sourceVideo.videoHeight;
-            const ctx = frameCanvas.getContext('2d');
-            ctx.drawImage(sourceVideo, 0, 0, frameCanvas.width, frameCanvas.height);
-            
-            const selectedFormat = imageFormatSelect.value;
-            const dataURL = frameCanvas.toDataURL(selectedFormat, 0.95);
-            resultImg.src = dataURL;
-            
-            resultBox.classList.remove('hidden');
-            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        imageFormatSelect.addEventListener('change', () => {
-            if (!resultBox.classList.contains('hidden')) {
-                renderCanvasFrame();
-            }
-        });
-
-        // Download Action & Adsterra Popunder Trigger
-        downloadBtn.addEventListener('click', () => {
-            if (!resultImg.src) return;
-
-            // Trigger Adsterra Popunder dynamically on download action
-            try {
-                const popScript = document.createElement('script');
-                popScript.setAttribute('data-cfasync', 'false');
-                popScript.src = 'https://abscloud.org/1/25fff96bdb25dfcca033fe37a12a2f9a';
-                document.body.appendChild(popScript);
-            } catch (err) {
-                console.log('Popunder triggered');
-            }
-
-            // Determine Extension
-            const format = imageFormatSelect.value;
-            const ext = format === 'image/jpeg' ? 'jpg' : 'png';
-
-            // Download file
-            const a = document.createElement('a');
-            a.href = resultImg.src;
-            a.download = `frame_${Math.floor(sourceVideo.currentTime * 1000)}ms.${ext}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        });
-
-        // Reset File Action
-        removeFileBtn.addEventListener('click', () => {
-            sourceVideo.pause();
-            sourceVideo.src = '';
-            fileInput.value = '';
-            resultImg.src = '';
-            resultBox.classList.add('hidden');
-            previewContainer.classList.add('hidden');
-            dropZone.classList.remove('hidden');
-        });
-    </script>
-</body>
-</html>
+    <footer class="border-t border-gray-80
