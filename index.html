@@ -26,6 +26,9 @@
     </script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Adsterra Social Bar Script -->
+    <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
 </head>
 <body class="bg-darkBg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-accentBlue selection:text-white">
 
@@ -42,6 +45,7 @@
             </div>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-400">
                 <a href="#tool" class="hover:text-white transition-colors">Tool</a>
+                <a href="#why-choose" class="hover:text-white transition-colors">Why Choose Us</a>
                 <a href="#features" class="hover:text-white transition-colors">Features</a>
                 <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
             </nav>
@@ -55,7 +59,21 @@
     </header>
 
     <!-- Main Container -->
-    <main class="flex-grow flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-10 max-w-5xl mx-auto w-full space-y-8">
+    <main class="flex-grow flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-8 max-w-5xl mx-auto w-full space-y-10">
+
+        <!-- Adsterra Banner Slot (728x90) -->
+        <div class="w-full bg-gray-900/60 border border-dashed border-gray-800 rounded-xl p-3 text-center text-xs text-gray-500 flex flex-col items-center justify-center min-h-[90px] overflow-hidden">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '03bcaf65bade4dd45675dac566f8ab25',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
+        </div>
 
         <!-- Hero Section -->
         <div class="text-center space-y-4 max-w-3xl">
@@ -78,20 +96,4 @@
                     <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-200 mb-1">Drag & drop your video here</h3>
-                <p class="text-sm text-gray-400 mb-6">Supports MP4, MOV, WebM (Max 500MB)</p>
-                <label class="px-6 py-3 bg-accentBlue hover:bg-blue-600 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-blue-500/25 transition-all transform hover:-translate-y-0.5">
-                    Browse Files
-                    <input type="file" id="video-file-input" accept="video/mp4,video/quicktime,video/webm" class="hidden">
-                </label>
-            </div>
-
-            <!-- Video Processing & Selector Area (Hidden by default) -->
-            <div id="preview-container" class="hidden space-y-6">
-                <!-- Header Status -->
-                <div class="flex items-center justify-between bg-darkBg/60 p-4 rounded-xl border border-gray-800">
-                    <div class="flex items-center space-x-3 overflow-hidden">
-                        <i class="fa-solid fa-file-video text-accentBlue text-xl"></i>
-                        <span id="file-name" class="text-sm font-medium text-gray-300 truncate">video.mp4</span>
-                    </div>
-                    <button id="remove-file" class="text-gray-500 hover:text-red-400 transition-colors text-sm px-3 py-1.5 rounded-lg bg-gray-800/50 hover:bg-red-500/10">
-                        <i class="fa-solid fa-trash-can mr-1.5"></i> Change Video
+                <p class="text-sm text-gray-400 mb-6">Supports MP4, MOV, WebM
