@@ -118,7 +118,7 @@
             box-shadow: 0 0 15px rgba(251, 191, 36, 0.9);
         }
 
-        /* AdSterra Slot Dotted Box Styling */
+        /* AdSterra Container Box Styling */
         .ad-slot-box {
             background: rgba(19, 27, 46, 0.7);
             border: 1px dashed #334155;
@@ -173,14 +173,20 @@
             <div class="ad-slot-box w-full max-w-[728px] min-h-[90px] rounded-xl flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
                 <div class="flex items-center gap-1.5 text-[10px] font-mono uppercase text-slate-400 mb-1">
                     <i class="fa-solid fa-rectangle-ad text-amber-500"></i>
-                    <span>Advertisement (AdSterra Top Leaderboard 728x90)</span>
+                    <span>Advertisement (Top 728x90)</span>
                 </div>
-                <p class="text-xs text-slate-500">Paste your AdSterra Banner Code inside this container script block</p>
                 
-                <!-- ========================================================= -->
-                <!-- ADSTERRA TOP LEADERBOARD (728x90) CODE PLACEHOLDER START -->
-                <!-- PASTE YOUR ADSTERRA CODE HERE -->
-                <!-- ========================================================= -->
+                <!-- ADSTERRA 728x90 TOP BANNER CODE -->
+                <script>
+                  atOptions = {
+                    'key' : '03bcaf65bade4dd45675dac566f8ab25',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
             </div>
         </div>
 
@@ -194,11 +200,7 @@
                     <span class="text-[10px] font-mono uppercase text-slate-400">Ad Space</span>
                     <p class="text-xs text-slate-500 my-2">AdSterra Left Skyscraper<br>(160x600)</p>
                     <div class="w-full border-t border-slate-800 my-3"></div>
-                    <span class="text-[10px] text-slate-600">High Engagement Display Banner</span>
-
-                    <!-- ========================================================= -->
-                    <!-- ADSTERRA LEFT SIDEBAR (160x600) CODE PLACEHOLDER -->
-                    <!-- ========================================================= -->
+                    <span class="text-[10px] text-slate-600">Skyscraper Display Banner</span>
                 </div>
             </aside>
 
@@ -220,14 +222,14 @@
 
                     <!-- DROPZONE / UPLOAD BOX -->
                     <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-cyan-400/80 bg-slate-950/70 rounded-2xl p-8 sm:p-12 text-center transition-all cursor-pointer group flex flex-col items-center justify-center min-h-[250px]">
-                        <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov" class="hidden">
+                        <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov,.avi" class="hidden">
                         
                         <div class="flex flex-col items-center">
                             <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all shadow-lg shadow-cyan-500/10">
                                 <i class="fa-solid fa-cloud-arrow-up text-3xl"></i>
                             </div>
                             <h3 class="text-base font-bold text-white mb-1">Drag & Drop your video file here</h3>
-                            <p class="text-xs text-slate-400 mb-5 max-w-sm">Supports MP4, WebM, MOV & OGV files up to 4K resolution. <br><span class="text-amber-400 font-semibold">100% Private — Processed entirely inside your browser.</span></p>
+                            <p class="text-xs text-slate-400 mb-5 max-w-sm">Supports MP4, WebM, MOV & AVI files up to 4K resolution. <br><span class="text-amber-400 font-semibold">100% Private — Processed entirely inside your browser.</span></p>
                             <button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 transition-all pointer-events-none">
                                 <i class="fa-solid fa-folder-open mr-1.5"></i> Select Local Video
                             </button>
@@ -432,7 +434,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60">
                             <span class="text-amber-400 font-bold font-mono text-sm block mb-1">01. Load Video</span>
-                            Drag and drop any local video file (MP4, MOV, WebM, OGV). The video instantly opens in the local HTML5 viewport.
+                            Drag and drop any local video file (MP4, MOV, WebM, AVI). The video instantly opens in the local HTML5 viewport.
                         </div>
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60">
                             <span class="text-cyan-400 font-bold font-mono text-sm block mb-1">02. Seek Frame</span>
@@ -480,7 +482,7 @@
                                 <i id="faq3Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
                             </button>
                             <div id="faq3" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
-                                FrameSnap supports all browser-native video codecs, including MP4 (H.264 / AV1), WebM, MOV (QuickTime), and OGV.
+                                FrameSnap supports all browser-native video codecs, including MP4 (H.264 / AV1), WebM, MOV (QuickTime), and AVI.
                             </div>
                         </div>
                     </div>
@@ -495,28 +497,31 @@
                     <span class="text-[10px] font-mono uppercase text-slate-400">Ad Space</span>
                     <p class="text-xs text-slate-500 my-2">AdSterra Right Skyscraper<br>(160x600)</p>
                     <div class="w-full border-t border-slate-800 my-3"></div>
-                    <span class="text-[10px] text-slate-600">High Engagement Display Banner</span>
-
-                    <!-- ========================================================= -->
-                    <!-- ADSTERRA RIGHT SIDEBAR (160x600) CODE PLACEHOLDER -->
-                    <!-- ========================================================= -->
+                    <span class="text-[10px] text-slate-600">Skyscraper Display Banner</span>
                 </div>
             </aside>
 
         </div>
 
-        <!-- BOTTOM IN-CONTENT ADSTERRA BANNER (728x90 or Native Ad) -->
+        <!-- BOTTOM IN-CONTENT ADSTERRA BANNER (728x90) -->
         <div class="w-full flex justify-center items-center my-4">
             <div class="ad-slot-box w-full max-w-[728px] min-h-[90px] rounded-xl flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
                 <div class="flex items-center gap-1.5 text-[10px] font-mono uppercase text-slate-400 mb-1">
                     <i class="fa-solid fa-rectangle-ad text-amber-500"></i>
-                    <span>Advertisement (AdSterra Bottom Banner)</span>
+                    <span>Advertisement (Bottom 728x90)</span>
                 </div>
-                <p class="text-xs text-slate-500">Paste your AdSterra Bottom Banner or Native Ad script code here</p>
-
-                <!-- ========================================================= -->
-                <!-- ADSTERRA BOTTOM BANNER CODE PLACEHOLDER -->
-                <!-- ========================================================= -->
+                
+                <!-- ADSTERRA 728x90 BOTTOM BANNER CODE -->
+                <script>
+                  atOptions = {
+                    'key' : '03bcaf65bade4dd45675dac566f8ab25',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                  };
+                </script>
+                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
             </div>
         </div>
 
@@ -714,7 +719,7 @@
         // Process Selected Local Video
         function processSelectedVideo(file) {
             if (!file.type.startsWith('video/')) {
-                showToast('Invalid file format. Please select an MP4, MOV, WebM, or OGV video.', 'error');
+                showToast('Invalid file format. Please select an MP4, MOV, WebM, or AVI video.', 'error');
                 return;
             }
 
