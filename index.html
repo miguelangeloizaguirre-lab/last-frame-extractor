@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrameSnap - HD Video Frame Extractor & Snapshot Tool</title>
+    <title>Frame Extractor - HD Video Snapshot & Image Grabber</title>
+
+    <!-- Global Error Guard to prevent third-party ad script errors from breaking app execution -->
+    <script>
+        window.addEventListener('error', function(event) {
+            // Suppress third-party cross-origin script errors (e.g., blocked ad scripts)
+            if (event.message === 'Script error.' || (event.filename && !event.filename.includes(window.location.hostname))) {
+                event.stopImmediatePropagation();
+                return true;
+            }
+        }, true);
+    </script>
 
     <!-- ADSTERRA SOCIAL BAR SCRIPT INTEGRATION -->
-    <script data-cfasync="false" src="https://bauval.org/14/ab122c093d07146d3a0753303d2c1b72"></script>
+    <script data-cfasync="false" src="https://bauval.org/14/ab122c093d07146d3a0753303d2c1b72" onerror="this.remove()"></script>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -143,14 +154,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-amber-500 to-amber-400 flex items-center justify-center text-slate-950 shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-camera-retro text-xl font-bold"></i>
+                    <i class="fa-solid fa-film text-xl font-bold"></i>
                 </div>
                 <div>
                     <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
-                        Frame<span class="text-cyan-400">Snap</span>
+                        Frame<span class="text-cyan-400">Extractor</span>
                         <span class="text-[10px] uppercase font-mono tracking-widest bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-1.5 py-0.5 rounded-md">Pro 4K</span>
                     </span>
-                    <p class="text-[11px] text-slate-400 hidden sm:block">Client-Side HD Video Frame Extractor</p>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Client-Side HD Video Frame Extractor & Snapshot Tool</p>
                 </div>
             </div>
 
@@ -186,7 +197,7 @@
                     'params' : {}
                   };
                 </script>
-                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
+                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25" onerror="this.remove()"></script>
             </div>
         </div>
 
@@ -211,7 +222,7 @@
                         'params' : {}
                       };
                     </script>
-                    <script src="https://bauval.org/22/8ed6ae03e3f438bb5c529a2dd22c4806"></script>
+                    <script src="https://bauval.org/22/8ed6ae03e3f438bb5c529a2dd22c4806" onerror="this.remove()"></script>
                 </div>
             </aside>
 
@@ -224,7 +235,7 @@
                     <!-- Card Header -->
                     <div class="flex items-center justify-between border-b border-slate-800/80 pb-4 mb-4">
                         <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-photo-film text-cyan-400"></i> Video Frame Studio
+                            <i class="fa-solid fa-photo-film text-cyan-400"></i> Frame Extractor Studio
                         </h2>
                         <span id="fileBadge" class="text-xs font-mono bg-slate-900 text-slate-400 px-3 py-1 rounded-full border border-slate-700/80">
                             No Video Loaded
@@ -484,7 +495,7 @@
                                 <i id="faq1Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
                             </button>
                             <div id="faq1" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
-                                No. FrameSnap works 100% locally inside your web browser. Your video files are processed in local device RAM and are never uploaded, stored, or transmitted across the internet.
+                                No. Frame Extractor works 100% locally inside your web browser. Your video files are processed in local device RAM and are never uploaded, stored, or transmitted across the internet.
                             </div>
                         </div>
 
@@ -506,7 +517,7 @@
                                 <i id="faq3Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
                             </button>
                             <div id="faq3" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
-                                FrameSnap supports all browser-native video codecs, including MP4 (H.264 / AV1), WebM, MOV (QuickTime), and AVI.
+                                Frame Extractor supports all browser-native video codecs, including MP4 (H.264 / AV1), WebM, MOV (QuickTime), and AVI.
                             </div>
                         </div>
                     </div>
@@ -532,7 +543,7 @@
                         'params' : {}
                       };
                     </script>
-                    <script src="https://bauval.org/22/8ed6ae03e3f438bb5c529a2dd22c4806"></script>
+                    <script src="https://bauval.org/22/8ed6ae03e3f438bb5c529a2dd22c4806" onerror="this.remove()"></script>
                 </div>
             </aside>
 
@@ -556,7 +567,7 @@
                     'params' : {}
                   };
                 </script>
-                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25"></script>
+                <script src="https://bauval.org/22/03bcaf65bade4dd45675dac566f8ab25" onerror="this.remove()"></script>
             </div>
         </div>
 
@@ -566,10 +577,10 @@
     <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 py-8 px-4 text-xs mt-12">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-camera-retro text-cyan-400 text-base"></i>
-                <span class="font-bold text-white text-sm">FrameSnap</span>
+                <i class="fa-solid fa-film text-cyan-400 text-base"></i>
+                <span class="font-bold text-white text-sm">Frame Extractor</span>
                 <span class="text-slate-700">|</span>
-                <span>© 2026 FrameSnap Studio. All rights reserved.</span>
+                <span>© 2026 Frame Extractor Studio. All rights reserved.</span>
             </div>
 
             <!-- Footer Legal Trigger Buttons -->
@@ -609,7 +620,7 @@
             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Privacy Policy</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
                 <p><strong>Effective Date: October 2026</strong></p>
-                <p>At FrameSnap, user privacy and data security are paramount.</p>
+                <p>At Frame Extractor, user privacy and data security are paramount.</p>
                 <h4 class="font-bold text-white text-sm">1. Client-Side Processing Guarantee</h4>
                 <p>All video rendering, frame decoding, and image export processes are executed locally on your client machine using HTML5 APIs. <strong>No video or image data is ever uploaded to any server.</strong></p>
                 <h4 class="font-bold text-white text-sm">2. Third-Party Advertising & AdSterra</h4>
@@ -626,11 +637,11 @@
             <button onclick="closeModal('termsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-cyan-400"></i> Terms of Service</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-                <p>By accessing FrameSnap, you agree to these Terms of Service.</p>
+                <p>By accessing Frame Extractor, you agree to these Terms of Service.</p>
                 <h4 class="font-bold text-white text-sm">1. Permitted Use</h4>
-                <p>FrameSnap is provided for legal media frame extraction. Users are responsible for ensuring they hold proper copyright or authorization for any media processed.</p>
+                <p>Frame Extractor is provided for legal media frame extraction. Users are responsible for ensuring they hold proper copyright or authorization for any media processed.</p>
                 <h4 class="font-bold text-white text-sm">2. Limitation of Liability</h4>
-                <p>FrameSnap is provided "AS IS" without warranty. We hold no liability for local browser performance or media rendering discrepancies.</p>
+                <p>Frame Extractor is provided "AS IS" without warranty. We hold no liability for local browser performance or media rendering discrepancies.</p>
             </div>
         </div>
     </div>
@@ -641,7 +652,7 @@
             <button onclick="closeModal('cookieModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-cookie-bite text-amber-500"></i> Cookie Policy</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-                <p>FrameSnap uses cookies solely for storing essential site preferences (such as cookie banner acceptance) and supporting advertising partners like AdSterra.</p>
+                <p>Frame Extractor uses cookies solely for storing essential site preferences (such as cookie banner acceptance) and supporting advertising partners like AdSterra.</p>
             </div>
         </div>
     </div>
@@ -913,7 +924,12 @@
             hiddenCanvas.height = mainVideo.videoHeight;
 
             const ctx = hiddenCanvas.getContext('2d');
-            ctx.drawImage(mainVideo, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+            try {
+                ctx.drawImage(mainVideo, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+            } catch (err) {
+                showToast('Failed to extract frame. Ensure video file is accessible.', 'error');
+                return;
+            }
 
             const format = formatSelect.value;
             const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
@@ -1015,7 +1031,7 @@
             if (!frame) return;
 
             const safeStamp = frame.timestamp.replace(/[:.]/g, '-');
-            const fileName = `FrameSnap_${safeStamp}.${frame.format.toLowerCase()}`;
+            const fileName = `FrameExtractor_${safeStamp}.${frame.format.toLowerCase()}`;
 
             const a = document.createElement('a');
             a.href = frame.dataUrl;
@@ -1047,12 +1063,12 @@
 
             try {
                 const zip = new JSZip();
-                const folder = zip.folder("FrameSnap_Export");
+                const folder = zip.folder("FrameExtractor_Export");
 
                 capturedFrames.forEach((frame, idx) => {
                     const safeStamp = frame.timestamp.replace(/[:.]/g, '-');
                     const base64Data = frame.dataUrl.split(',')[1];
-                    const fileName = `FrameSnap_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
+                    const fileName = `FrameExtractor_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
                     folder.file(fileName, base64Data, { base64: true });
                 });
 
@@ -1061,7 +1077,7 @@
 
                 const a = document.createElement('a');
                 a.href = zipUrl;
-                a.download = `FrameSnap_Collection_${Date.now()}.zip`;
+                a.download = `FrameExtractor_Collection_${Date.now()}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1132,11 +1148,11 @@
 
         btnAcceptCookies.addEventListener('click', () => {
             cookieBanner.classList.add('translate-y-full');
-            localStorage.setItem('framesnap_cookies_accepted', 'true');
+            localStorage.setItem('frame_extractor_cookies_accepted', 'true');
         });
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('framesnap_cookies_accepted') === 'true') {
+            if (localStorage.getItem('frame_extractor_cookies_accepted') === 'true') {
                 cookieBanner.classList.add('translate-y-full');
             }
         });
