@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FrameSnap - HD Video Frame Extractor & Snapshot Tool</title>
     
+    <!-- ADSTERRA SOCIAL BAR SCRIPT INTEGRATION -->
+    <script data-cfasync="false" src="https://bauval.org/14/ab122c093d07146d3a0753303d2c1b72"></script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -18,8 +21,13 @@
                             500: '#f59e0b',
                             600: '#d97706',
                         },
-                        obsidian: '#090d16',
-                        slatepanel: '#111827',
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                        },
+                        darkbg: '#0b0f19',
+                        panelbg: '#131b2e',
                         cardbg: '#1e293b'
                     },
                     fontFamily: {
@@ -34,16 +42,16 @@
     <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- JSZip Library for Batch Zip Export -->
+    <!-- JSZip Library for Batch ZIP Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #090d16;
+            background-color: #0b0f19;
             color: #f8fafc;
         }
 
@@ -60,19 +68,24 @@
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b;
+            background: #06b6d4;
         }
 
-        /* Flash Animation on Capture */
+        /* Camera Shutter Flash Animation */
         @keyframes cameraFlash {
-            0% { opacity: 0.9; background-color: #ffffff; }
+            0% { opacity: 0.95; background-color: #ffffff; }
             100% { opacity: 0; background-color: transparent; }
         }
         .flash-effect {
             animation: cameraFlash 0.35s ease-out forwards;
         }
 
-        /* Custom Range Input */
+        /* Lens Glow Effect */
+        .lens-glow {
+            box-shadow: 0 0 30px -5px rgba(6, 182, 212, 0.25), 0 0 15px -5px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Custom Range Slider */
         input[type=range] {
             -webkit-appearance: none;
             background: transparent;
@@ -84,257 +97,272 @@
             width: 100%;
             height: 8px;
             cursor: pointer;
-            background: #334155;
+            background: #1e293b;
             border-radius: 4px;
+            border: 1px solid #334155;
         }
         input[type=range]::-webkit-slider-thumb {
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #f59e0b;
+            background: #06b6d4;
             cursor: pointer;
             -webkit-appearance: none;
-            margin-top: -6px;
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
-            transition: transform 0.1s ease;
+            margin-top: -7px;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.8);
+            transition: all 0.15s ease;
         }
         input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
+            transform: scale(1.25);
+            background: #fbbf24;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.9);
         }
 
-        /* AdSterra Container Dotted Styling */
-        .ad-space-box {
-            background: rgba(15, 23, 42, 0.6);
+        /* AdSterra Slot Dotted Box Styling */
+        .ad-slot-box {
+            background: rgba(19, 27, 46, 0.7);
             border: 1px dashed #334155;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
-        .ad-space-box:hover {
-            border-color: #f59e0b;
+        .ad-slot-box:hover {
+            border-color: #06b6d4;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
         }
-        
-        /* Modal Backdrop Fade */
+
+        /* Modal Backdrop */
         .modal-backdrop {
             background-color: rgba(3, 7, 18, 0.85);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950">
 
-    <!-- Top Navigation Header -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-slate-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20">
-                    <i class="fa-solid font-bold fa-camera-retro text-xl"></i>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-amber-500 to-amber-400 flex items-center justify-center text-slate-950 shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-camera-retro text-xl font-bold"></i>
                 </div>
                 <div>
-                    <span class="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
-                        Frame<span class="text-amber-500">Snap</span>
-                        <span class="text-[10px] uppercase font-mono tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded">HD Pro</span>
+                    <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                        Frame<span class="text-cyan-400">Snap</span>
+                        <span class="text-[10px] uppercase font-mono tracking-widest bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-1.5 py-0.5 rounded-md">Pro 4K</span>
                     </span>
-                    <p class="text-xs text-slate-400 hidden sm:block">Client-Side Video Snapshot Extractor</p>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Client-Side HD Video Frame Extractor</p>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex items-center space-x-1 sm:space-x-4 text-xs sm:text-sm font-medium text-slate-300">
-                <a href="#tool" class="px-3 py-2 rounded-lg hover:text-amber-400 hover:bg-slate-800/60 transition-all">Tool</a>
-                <button onclick="openModal('howItWorksModal')" class="px-3 py-2 rounded-lg hover:text-amber-400 hover:bg-slate-800/60 transition-all">How It Works</button>
-                <button onclick="openModal('privacyModal')" class="px-3 py-2 rounded-lg hover:text-amber-400 hover:bg-slate-800/60 transition-all hidden md:inline-block">Privacy</button>
-                <button onclick="openModal('contactModal')" class="px-3 py-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all font-semibold">Contact</button>
+            <!-- Header Navigation Links -->
+            <nav class="flex items-center space-x-1 sm:space-x-3 text-xs sm:text-sm font-medium text-slate-300">
+                <a href="#tool" class="px-3 py-2 rounded-lg hover:text-cyan-400 hover:bg-slate-800/60 transition">Extractor Tool</a>
+                <a href="#features" class="px-3 py-2 rounded-lg hover:text-cyan-400 hover:bg-slate-800/60 transition hidden md:inline-block">Features</a>
+                <a href="#guide" class="px-3 py-2 rounded-lg hover:text-cyan-400 hover:bg-slate-800/60 transition hidden lg:inline-block">How It Works</a>
+                <a href="#faq" class="px-3 py-2 rounded-lg hover:text-cyan-400 hover:bg-slate-800/60 transition hidden md:inline-block">FAQ</a>
+                <button onclick="openModal('contactModal')" class="px-3.5 py-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500 hover:text-slate-950 transition font-semibold">Contact Us</button>
             </nav>
         </div>
     </header>
 
-    <!-- MAIN BODY CONTAINER -->
+    <!-- MAIN CONTAINER -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-2 sm:px-4 lg:px-6 py-6 flex flex-col gap-6">
 
-        <!-- TOP ADSTERRA BANNER PLACEHOLDER (728x90) -->
+        <!-- TOP ADSTERRA LEADERBOARD AD BANNER (728x90) -->
         <div class="w-full flex justify-center items-center my-1">
-            <div class="ad-space-box w-full max-w-[728px] h-[90px] rounded-lg flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
-                <span class="text-[10px] uppercase tracking-wider font-mono text-slate-400 mb-1">
-                    <i class="fa-solid font-bold fa-rectangle-ad text-amber-500 mr-1"></i> Advertisement Space (AdSterra 728x90 Leaderboard)
-                </span>
-                <p class="text-xs text-slate-500">High-Visibility Banner Placement</p>
+            <div class="ad-slot-box w-full max-w-[728px] min-h-[90px] rounded-xl flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
+                <div class="flex items-center gap-1.5 text-[10px] font-mono uppercase text-slate-400 mb-1">
+                    <i class="fa-solid fa-rectangle-ad text-amber-500"></i>
+                    <span>Advertisement (AdSterra Top Leaderboard 728x90)</span>
+                </div>
+                <p class="text-xs text-slate-500">Paste your AdSterra Banner Code inside this container script block</p>
                 
-                <!-- AdSterra Top Leaderboard 728x90 Code Start -->
-                <!-- Place your AdSterra banner script tag here -->
-                <!-- <script type="text/javascript">
-                    atOptions = {
-                        'key' : 'YOUR_ADSTERRA_TOP_KEY',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                    };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/YOUR_ADSTERRA_TOP_KEY/invoke.js"></script> -->
-                <!-- AdSterra Top Leaderboard 728x90 Code End -->
+                <!-- ========================================================= -->
+                <!-- ADSTERRA TOP LEADERBOARD (728x90) CODE PLACEHOLDER START -->
+                <!-- PASTE YOUR ADSTERRA CODE HERE -->
+                <!-- ========================================================= -->
             </div>
         </div>
 
-        <!-- 3-COLUMN LAYOUT (Left Ad, Main Tool, Right Ad) -->
+        <!-- 3-COLUMN LAYOUT (Left Sidebar Ad, Main Tool Workspace, Right Sidebar Ad) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-            <!-- LEFT AD COLUMN (160x600 Wide Skyscraper) -->
+            <!-- LEFT SIDEBAR ADSTERRA SLOT (160x600 Wide Skyscraper) -->
             <aside class="hidden lg:flex lg:col-span-2 flex-col items-center justify-start sticky top-20">
-                <div class="ad-space-box w-[160px] h-[600px] rounded-xl flex flex-col items-center justify-center p-3 text-center text-slate-500 shadow-md">
-                    <span class="text-[10px] uppercase tracking-wider font-mono text-slate-400 mb-2">
-                        <i class="fa-solid font-bold fa-rectangle-ad text-amber-500"></i><br>Ad Space
-                    </span>
-                    <p class="text-xs text-slate-500 my-2">AdSterra 160x600 Skyscraper</p>
-                    <div class="w-full border-t border-slate-800 my-2"></div>
-                    <p class="text-[10px] text-slate-600">Supports Display & Native Ads</p>
+                <div class="ad-slot-box w-[160px] min-h-[600px] rounded-xl flex flex-col items-center justify-center p-3 text-center text-slate-500 shadow-lg">
+                    <i class="fa-solid fa-rectangle-ad text-amber-500 text-lg mb-2"></i>
+                    <span class="text-[10px] font-mono uppercase text-slate-400">Ad Space</span>
+                    <p class="text-xs text-slate-500 my-2">AdSterra Left Skyscraper<br>(160x600)</p>
+                    <div class="w-full border-t border-slate-800 my-3"></div>
+                    <span class="text-[10px] text-slate-600">High Engagement Display Banner</span>
 
-                    <!-- AdSterra Left Skyscraper 160x600 Code Start -->
-                    <!-- <script type="text/javascript">
-                        atOptions = {
-                            'key' : 'YOUR_ADSTERRA_LEFT_KEY',
-                            'format' : 'iframe',
-                            'height' : 600,
-                            'width' : 160,
-                            'params' : {}
-                        };
-                    </script>
-                    <script type="text/javascript" src="//www.highperformanceformat.com/YOUR_ADSTERRA_LEFT_KEY/invoke.js"></script> -->
-                    <!-- AdSterra Left Skyscraper 160x600 Code End -->
+                    <!-- ========================================================= -->
+                    <!-- ADSTERRA LEFT SIDEBAR (160x600) CODE PLACEHOLDER -->
+                    <!-- ========================================================= -->
                 </div>
             </aside>
 
-            <!-- CENTER COLUMN: MAIN TOOL & GALLERY -->
+            <!-- CENTER MAIN WORKSPACE -->
             <section id="tool" class="col-span-1 lg:col-span-8 flex flex-col gap-6">
 
-                <!-- VIDEO UPLOADER & WORKSPACE CARD -->
-                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid font-bold fa-film text-amber-500"></i> Video Workspace
+                <!-- MAIN EXTRACTOR CARD -->
+                <div class="bg-panelbg border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md relative overflow-hidden lens-glow">
+                    
+                    <!-- Card Header -->
+                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-4 mb-4">
+                        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-photo-film text-cyan-400"></i> Video Frame Studio
                         </h2>
-                        <span id="fileStatusBadge" class="text-xs font-mono bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full border border-slate-700">No Video Loaded</span>
+                        <span id="fileBadge" class="text-xs font-mono bg-slate-900 text-slate-400 px-3 py-1 rounded-full border border-slate-700/80">
+                            No Video File Selected
+                        </span>
                     </div>
 
                     <!-- DROPZONE / UPLOAD BOX -->
-                    <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-amber-500/80 bg-slate-950/60 rounded-xl p-8 text-center transition-all cursor-pointer group flex flex-col items-center justify-center min-h-[220px]">
+                    <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-cyan-400/80 bg-slate-950/70 rounded-2xl p-8 sm:p-12 text-center transition-all cursor-pointer group flex flex-col items-center justify-center min-h-[250px]">
                         <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/ogg,video/quicktime,.mov" class="hidden">
                         
-                        <div id="uploadPlaceholder" class="flex flex-col items-center">
-                            <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all shadow-lg">
-                                <i class="fa-solid font-bold fa-cloud-arrow-up text-2xl"></i>
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all shadow-lg shadow-cyan-500/10">
+                                <i class="fa-solid fa-cloud-arrow-up text-3xl"></i>
                             </div>
-                            <h3 class="text-base font-semibold text-white mb-1">Drag & Drop your video here</h3>
-                            <p class="text-xs text-slate-400 mb-4 max-w-sm">Supports MP4, WebM, MOV, OGG formats up to 4K resolution. <span class="text-amber-400 font-medium">100% Private - Processed locally inside your browser.</span></p>
-                            <button class="px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-amber-400 shadow-lg shadow-amber-500/20 transition-all pointer-events-none">
-                                <i class="fa-solid font-bold fa-folder-open mr-1.5"></i> Select Video File
+                            <h3 class="text-base font-bold text-white mb-1">Drag & Drop your video file here</h3>
+                            <p class="text-xs text-slate-400 mb-5 max-w-sm">Supports MP4, WebM, MOV & OGV files up to 4K resolution. <br><span class="text-amber-400 font-semibold">100% Private — Processed entirely inside your browser.</span></p>
+                            <button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 transition-all pointer-events-none">
+                                <i class="fa-solid fa-folder-open mr-1.5"></i> Select Local Video
                             </button>
                         </div>
                     </div>
 
-                    <!-- VIDEO PLAYER DISPLAY & CANVAS CONTAINER (Hidden initially) -->
-                    <div id="playerSection" class="hidden flex-col gap-4">
-                        <div class="relative rounded-xl overflow-hidden bg-black border border-slate-800 group shadow-2xl">
-                            <!-- Flash overlay effect -->
+                    <!-- ACTIVE VIDEO PLAYER & CONTROL PANEL (Hidden by default) -->
+                    <div id="playerContainer" class="hidden flex-col gap-4">
+                        
+                        <!-- Video Display Box -->
+                        <div class="relative rounded-2xl overflow-hidden bg-black border border-slate-800 shadow-2xl group">
+                            <!-- Camera Flash Effect Overlay -->
                             <div id="flashOverlay" class="absolute inset-0 z-20 pointer-events-none opacity-0"></div>
 
-                            <!-- HTML5 Video Element -->
-                            <video id="videoElement" class="w-full max-h-[500px] object-contain mx-auto bg-black" crossorigin="anonymous"></video>
+                            <!-- HTML5 Video Player -->
+                            <video id="mainVideo" class="w-full max-h-[480px] object-contain mx-auto bg-black" crossorigin="anonymous"></video>
 
                             <!-- Hidden Extraction Canvas -->
-                            <canvas id="captureCanvas" class="hidden"></canvas>
+                            <canvas id="hiddenCanvas" class="hidden"></canvas>
                         </div>
 
-                        <!-- LIVE VIDEO SPECS METADATA BAR -->
+                        <!-- VIDEO SPECIFICATIONS METADATA BAR -->
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono bg-slate-950/80 p-3 rounded-xl border border-slate-800/80">
-                            <div><span class="text-slate-500">Resolution:</span> <span id="specResolution" class="text-amber-400 font-semibold">1920 x 1080</span></div>
+                            <div><span class="text-slate-500">Resolution:</span> <span id="specResolution" class="text-cyan-400 font-semibold">1920 x 1080</span></div>
                             <div><span class="text-slate-500">Duration:</span> <span id="specDuration" class="text-slate-200">00:00:00</span></div>
-                            <div><span class="text-slate-500">Est. FPS:</span> <span id="specFps" class="text-slate-200">29.97</span></div>
+                            <div><span class="text-slate-500">Est. Rate:</span> <span id="specFps" class="text-amber-400 font-medium">29.97 fps</span></div>
                             <div><span class="text-slate-500">File Size:</span> <span id="specSize" class="text-slate-200">-- MB</span></div>
                         </div>
 
-                        <!-- PRECISION SCRUBBER & TIME CONTROL PANEL -->
+                        <!-- PRECISION TIMELINE SCRUBBER & TIME CONTROLS -->
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 flex flex-col gap-4">
                             
-                            <!-- Timeline Slider with Timestamp -->
+                            <!-- Millisecond Time Bar -->
                             <div class="flex flex-col gap-1.5">
                                 <div class="flex justify-between items-center text-xs font-mono">
-                                    <span class="text-amber-400 font-bold flex items-center gap-1.5 text-sm">
-                                        <i class="fa-solid font-bold fa-clock text-xs"></i>
-                                        <span id="currentTimeDisplay">00:00:00.000</span>
+                                    <span class="text-cyan-400 font-bold flex items-center gap-1.5 text-sm">
+                                        <i class="fa-solid fa-clock text-xs"></i>
+                                        <span id="currentTimeText">00:00:00.000</span>
                                     </span>
-                                    <span class="text-slate-500" id="totalTimeDisplay">00:00:00.000</span>
+                                    <span class="text-slate-500" id="totalTimeText">00:00:00.000</span>
                                 </div>
                                 <input type="range" id="timeScrubber" min="0" max="100" value="0" step="0.001" class="w-full">
                             </div>
 
-                            <!-- Playback & Precise Stepping Buttons -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 border-t border-slate-900 pt-3">
+                            <!-- STEPPER BUTTONS & PLAYBACK CONTROLS -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-900">
                                 
-                                <!-- Play/Pause & Step Controls -->
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <button id="btnPlayPause" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs flex items-center gap-1.5 border border-slate-700 transition">
-                                        <i class="fa-solid font-bold fa-play text-amber-400" id="playIcon"></i> <span id="playText">Play</span>
+                                <div class="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                                    <!-- Jump -5s -->
+                                    <button id="btnMinus5s" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-800 transition" title="Rewind 5 Seconds">
+                                        -5s
                                     </button>
 
-                                    <div class="h-5 w-px bg-slate-800 mx-1 hidden sm:block"></div>
-
-                                    <button id="btnStepBackSec" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700 transition" title="Rewind 1 Second">
-                                        <i class="fa-solid font-bold fa-backward-step mr-1"></i> -1s
+                                    <!-- Jump -1s -->
+                                    <button id="btnMinus1s" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-800 transition" title="Rewind 1 Second">
+                                        -1s
                                     </button>
 
-                                    <button id="btnStepBackFrame" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-mono border border-slate-700 transition" title="Previous Frame (~33ms)">
-                                        <i class="fa-solid font-bold fa-chevron-left mr-1"></i> -1 Frame
+                                    <!-- Step -1 Frame -->
+                                    <button id="btnPrevFrame" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-mono border border-slate-700 transition font-semibold" title="Previous Frame (~0.033s)">
+                                        <i class="fa-solid fa-chevron-left mr-1"></i> -1 Frame
                                     </button>
 
-                                    <button id="btnStepForwardFrame" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-mono border border-slate-700 transition" title="Next Frame (~33ms)">
-                                        +1 Frame <i class="fa-solid font-bold fa-chevron-right ml-1"></i>
+                                    <!-- Play/Pause Toggle -->
+                                    <button id="btnTogglePlay" class="px-4 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500 hover:text-slate-950 text-cyan-400 font-bold text-xs flex items-center gap-1.5 border border-cyan-500/30 transition">
+                                        <i class="fa-solid fa-play" id="playStatusIcon"></i> <span id="playStatusText">Play</span>
                                     </button>
 
-                                    <button id="btnStepForwardSec" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700 transition" title="Forward 1 Second">
-                                        +1s <i class="fa-solid font-bold fa-forward-step ml-1"></i>
+                                    <!-- Step +1 Frame -->
+                                    <button id="btnNextFrame" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-mono border border-slate-700 transition font-semibold" title="Next Frame (~0.033s)">
+                                        +1 Frame <i class="fa-solid fa-chevron-right ml-1"></i>
+                                    </button>
+
+                                    <!-- Jump +1s -->
+                                    <button id="btnPlus1s" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-800 transition" title="Forward 1 Second">
+                                        +1s
+                                    </button>
+
+                                    <!-- Jump +5s -->
+                                    <button id="btnPlus5s" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-800 transition" title="Forward 5 Seconds">
+                                        +5s
                                     </button>
                                 </div>
 
-                                <!-- Change Video File Button -->
-                                <button id="btnReplaceVideo" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs border border-slate-800 transition">
-                                    <i class="fa-solid font-bold fa-arrow-right-arrows-rotate mr-1"></i> Change Video
+                                <!-- Change File Button -->
+                                <button id="btnChangeVideo" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-xs border border-slate-800 transition">
+                                    <i class="fa-solid fa-rotate mr-1"></i> Change Video
                                 </button>
                             </div>
                         </div>
 
-                        <!-- CAPTURE ACTION BAR & FORMAT OPTIONS -->
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-amber-950/30 via-slate-900 to-slate-900 p-4 rounded-xl border border-amber-500/20 shadow-xl">
-                            <div class="flex items-center gap-4 w-full sm:w-auto">
-                                <label class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
-                                    <i class="fa-solid font-bold fa-sliders text-amber-500"></i> Format:
-                                </label>
-                                <select id="formatSelect" class="bg-slate-950 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 focus:border-amber-500 outline-none font-mono">
-                                    <option value="png">PNG (Lossless High-Res)</option>
-                                    <option value="jpeg">JPEG (High Quality 95%)</option>
-                                </select>
+                        <!-- FORMAT OPTIONS & CAPTURE ACTION BAR -->
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-900 p-4 rounded-xl border border-cyan-500/20 shadow-xl">
+                            
+                            <!-- Export Format & Quality Selectors -->
+                            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                                <div class="flex items-center gap-2">
+                                    <label class="text-xs text-slate-300 font-medium">Format:</label>
+                                    <select id="formatSelect" class="bg-slate-950 border border-slate-700 text-white text-xs rounded-lg px-3 py-2 focus:border-cyan-500 outline-none font-mono">
+                                        <option value="png">PNG (Lossless High-Res)</option>
+                                        <option value="jpeg">JPEG (Compressed)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Quality Slider for JPEG -->
+                                <div id="jpegQualityWrapper" class="hidden items-center gap-2">
+                                    <label class="text-xs text-slate-300 font-medium">Quality:</label>
+                                    <input type="range" id="jpegQuality" min="0.10" max="1.0" step="0.05" value="0.95" class="w-20">
+                                    <span id="qualityValText" class="text-xs font-mono text-cyan-400">95%</span>
+                                </div>
                             </div>
 
-                            <button id="btnCaptureFrame" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/25 transition-all transform active:scale-95 flex items-center justify-center gap-2">
-                                <i class="fa-solid font-bold fa-camera text-base"></i> Capture Frame Snapshot
+                            <!-- Capture Frame CTA Button -->
+                            <button id="btnCapture" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/25 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-camera text-base"></i> Capture Snapshot Frame
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- CAPTURED FRAMES GALLERY SECTION -->
-                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md">
+                <!-- CAPTURED FRAMES GALLERY CONTAINER -->
+                <div class="bg-panelbg border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-4">
                         <div>
                             <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid font-bold fa-images text-amber-500"></i> Captured Frames Gallery
-                                <span id="galleryCount" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-mono">0</span>
+                                <i class="fa-solid fa-images text-amber-500"></i> Captured Snapshots Gallery
+                                <span id="galleryCount" class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-mono">0</span>
                             </h3>
-                            <p class="text-xs text-slate-400">All captured snapshots are stored temporarily in browser memory.</p>
+                            <p class="text-xs text-slate-400">Saved locally in browser memory. Download individually or export as ZIP.</p>
                         </div>
 
-                        <!-- Gallery Batch Action Buttons -->
+                        <!-- Gallery Batch Controls -->
                         <div class="flex items-center gap-2">
-                            <button id="btnClearGallery" disabled class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-rose-950/60 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700 transition disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1">
-                                <i class="fa-solid font-bold fa-trash-can"></i> Clear All
+                            <button id="btnClearGallery" disabled class="px-3 py-2 rounded-lg bg-slate-900 hover:bg-rose-950/70 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-800 transition disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1">
+                                <i class="fa-solid fa-trash-can"></i> Clear All
                             </button>
                             <button id="btnDownloadZip" disabled class="px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500 hover:text-slate-950 text-xs font-bold transition disabled:opacity-40 disabled:pointer-events-none flex items-center gap-1.5 shadow-md">
                                 <i class="fa-solid font-bold fa-file-zipper"></i> Download All (ZIP)
@@ -342,87 +370,153 @@
                         </div>
                     </div>
 
-                    <!-- Gallery Grid Display -->
+                    <!-- Gallery Cards Grid -->
                     <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[160px]">
-                        <!-- Empty State Notice -->
-                        <div id="emptyGalleryNotice" class="col-span-full flex flex-col items-center justify-center text-center py-10 text-slate-500 border border-dashed border-slate-800 rounded-xl bg-slate-950/40">
-                            <i class="fa-solid font-bold fa-photo-film text-3xl mb-2 text-slate-600"></i>
+                        <!-- Empty Notice State -->
+                        <div id="emptyGalleryState" class="col-span-full flex flex-col items-center justify-center text-center py-10 text-slate-500 border border-dashed border-slate-800/80 rounded-xl bg-slate-950/40">
+                            <i class="fa-solid fa-camera-retro text-3xl mb-2 text-slate-600"></i>
                             <p class="text-sm font-medium text-slate-400">No frame snapshots captured yet</p>
-                            <p class="text-xs text-slate-500 mt-1 max-w-xs">Load a video above and click "Capture Frame Snapshot" to save high-resolution still images here.</p>
+                            <p class="text-xs text-slate-500 mt-1 max-w-xs">Load a video above and click "Capture Snapshot Frame" to extract crisp still photos.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- HOW IT WORKS INSTRUCTIONAL CARD -->
-                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5 text-xs text-slate-400 leading-relaxed">
-                    <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                        <i class="fa-solid font-bold fa-circle-info text-amber-500"></i> How to Extract HD Video Frames with FrameSnap
-                    </h4>
-                    <ol class="grid grid-cols-1 md:grid-cols-3 gap-4 font-normal">
-                        <li class="bg-slate-950 p-3 rounded-xl border border-slate-800/60 flex flex-col gap-1">
-                            <span class="font-bold text-amber-400 text-sm">1. Load Video</span>
-                            Drag and drop any local MP4, WebM, or MOV video file directly into the workspace dropzone.
-                        </li>
-                        <li class="bg-slate-950 p-3 rounded-xl border border-slate-800/60 flex flex-col gap-1">
-                            <span class="font-bold text-amber-400 text-sm">2. Precise Seek</span>
-                            Use the timeline scrubber or frame step buttons (<i class="fa-solid font-bold fa-chevron-left text-[10px]"></i> / <i class="fa-solid font-bold fa-chevron-right text-[10px]"></i>) to pinpoint exact timestamps.
-                        </li>
-                        <li class="bg-slate-950 p-3 rounded-xl border border-slate-800/60 flex flex-col gap-1">
-                            <span class="font-bold text-amber-400 text-sm">3. Instant Save</span>
-                            Choose PNG or JPEG format, capture the frame, and download individual photos or export all as a ZIP archive.
-                        </li>
-                    </ol>
-                </div>
+                <!-- FEATURES SECTION -->
+                <section id="features" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                    <div class="bg-panelbg border border-slate-800/80 rounded-xl p-4 flex items-start gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-expand text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1">Full Native Resolution</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Extract frames at the exact original pixel dimension of the source video (1080p, 4K, and beyond) without downscaling.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-panelbg border border-slate-800/80 rounded-xl p-4 flex items-start gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-shield-halved text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1">100% Client-Side Privacy</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Your videos never touch external servers or cloud storage. Files are rendered locally inside browser RAM for total confidentiality.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-panelbg border border-slate-800/80 rounded-xl p-4 flex items-start gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-gauge-high text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1">Millisecond Precision</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Step forward or backward single frames (~0.033s) or jump seconds to isolate key action moments easily.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-panelbg border border-slate-800/80 rounded-xl p-4 flex items-start gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-file-zipper text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1">Batch ZIP Archiving</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">Capture dozens of frames across a video session and package them into a clean ZIP file with one click.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HOW TO USE GUIDE -->
+                <section id="guide" class="bg-panelbg border border-slate-800/80 rounded-2xl p-5 text-xs text-slate-400">
+                    <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-play text-cyan-400"></i> How to Extract HD Video Snapshots in 3 Steps
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60">
+                            <span class="text-amber-400 font-bold font-mono text-sm block mb-1">01. Load Video</span>
+                            Drag and drop any local video file (MP4, MOV, WebM, OGV). The video instantly opens in the local HTML5 viewport.
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60">
+                            <span class="text-cyan-400 font-bold font-mono text-sm block mb-1">02. Seek Frame</span>
+                            Use the slider, millisecond stepper buttons, or play/pause controls to find the exact video moment.
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/60">
+                            <span class="text-amber-400 font-bold font-mono text-sm block mb-1">03. Save Image</span>
+                            Select PNG or JPEG, click "Capture Snapshot Frame", and download individual images or batch export a ZIP archive.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FREQUENTLY ASKED QUESTIONS (FAQ Accordion) -->
+                <section id="faq" class="bg-panelbg border border-slate-800/80 rounded-2xl p-5">
+                    <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-amber-500"></i> Frequently Asked Questions
+                    </h3>
+                    <div class="space-y-3">
+                        <!-- FAQ 1 -->
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden">
+                            <button onclick="toggleFaq('faq1')" class="w-full text-left p-3.5 text-xs font-semibold text-white flex justify-between items-center hover:text-cyan-400 transition">
+                                <span>Is my video uploaded to any cloud server?</span>
+                                <i id="faq1Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
+                            </button>
+                            <div id="faq1" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
+                                No. FrameSnap works 100% locally inside your web browser. Your video files are processed in local device memory and are never uploaded, stored, or transmitted across the internet.
+                            </div>
+                        </div>
+
+                        <!-- FAQ 2 -->
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden">
+                            <button onclick="toggleFaq('faq2')" class="w-full text-left p-3.5 text-xs font-semibold text-white flex justify-between items-center hover:text-cyan-400 transition">
+                                <span>What is the image quality of extracted frames?</span>
+                                <i id="faq2Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
+                            </button>
+                            <div id="faq2" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
+                                Frames are extracted at 100% full original resolution. Selecting PNG output produces lossless quality. Selecting JPEG allows you to customize compression quality up to 100%.
+                            </div>
+                        </div>
+
+                        <!-- FAQ 3 -->
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden">
+                            <button onclick="toggleFaq('faq3')" class="w-full text-left p-3.5 text-xs font-semibold text-white flex justify-between items-center hover:text-cyan-400 transition">
+                                <span>Which video file formats are supported?</span>
+                                <i id="faq3Icon" class="fa-solid fa-chevron-down text-slate-500 text-xs"></i>
+                            </button>
+                            <div id="faq3" class="hidden px-3.5 pb-3.5 text-xs text-slate-400 leading-relaxed border-t border-slate-900 pt-2">
+                                FrameSnap supports all browser-native video codecs, including MP4 (H.264 / AV1), WebM, MOV (QuickTime), and OGV.
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
             </section>
 
-            <!-- RIGHT AD COLUMN (160x600 Wide Skyscraper) -->
+            <!-- RIGHT SIDEBAR ADSTERRA SLOT (160x600 Wide Skyscraper) -->
             <aside class="hidden lg:flex lg:col-span-2 flex-col items-center justify-start sticky top-20">
-                <div class="ad-space-box w-[160px] h-[600px] rounded-xl flex flex-col items-center justify-center p-3 text-center text-slate-500 shadow-md">
-                    <span class="text-[10px] uppercase tracking-wider font-mono text-slate-400 mb-2">
-                        <i class="fa-solid font-bold fa-rectangle-ad text-amber-500"></i><br>Ad Space
-                    </span>
-                    <p class="text-xs text-slate-500 my-2">AdSterra 160x600 Skyscraper</p>
-                    <div class="w-full border-t border-slate-800 my-2"></div>
-                    <p class="text-[10px] text-slate-600">Supports Display & Native Ads</p>
+                <div class="ad-slot-box w-[160px] min-h-[600px] rounded-xl flex flex-col items-center justify-center p-3 text-center text-slate-500 shadow-lg">
+                    <i class="fa-solid fa-rectangle-ad text-amber-500 text-lg mb-2"></i>
+                    <span class="text-[10px] font-mono uppercase text-slate-400">Ad Space</span>
+                    <p class="text-xs text-slate-500 my-2">AdSterra Right Skyscraper<br>(160x600)</p>
+                    <div class="w-full border-t border-slate-800 my-3"></div>
+                    <span class="text-[10px] text-slate-600">High Engagement Display Banner</span>
 
-                    <!-- AdSterra Right Skyscraper 160x600 Code Start -->
-                    <!-- <script type="text/javascript">
-                        atOptions = {
-                            'key' : 'YOUR_ADSTERRA_RIGHT_KEY',
-                            'format' : 'iframe',
-                            'height' : 600,
-                            'width' : 160,
-                            'params' : {}
-                        };
-                    </script>
-                    <script type="text/javascript" src="//www.highperformanceformat.com/YOUR_ADSTERRA_RIGHT_KEY/invoke.js"></script> -->
-                    <!-- AdSterra Right Skyscraper 160x600 Code End -->
+                    <!-- ========================================================= -->
+                    <!-- ADSTERRA RIGHT SIDEBAR (160x600) CODE PLACEHOLDER -->
+                    <!-- ========================================================= -->
                 </div>
             </aside>
 
         </div>
 
-        <!-- BOTTOM ADSTERRA BANNER PLACEHOLDER (728x90) -->
+        <!-- BOTTOM IN-CONTENT ADSTERRA BANNER (728x90 or Native Ad) -->
         <div class="w-full flex justify-center items-center my-4">
-            <div class="ad-space-box w-full max-w-[728px] h-[90px] rounded-lg flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
-                <span class="text-[10px] uppercase tracking-wider font-mono text-slate-400 mb-1">
-                    <i class="fa-solid font-bold fa-rectangle-ad text-amber-500 mr-1"></i> Advertisement Space (AdSterra 728x90 Leaderboard)
-                </span>
-                <p class="text-xs text-slate-500">Footer Leaderboard Ad Unit</p>
+            <div class="ad-slot-box w-full max-w-[728px] min-h-[90px] rounded-xl flex flex-col items-center justify-center p-2 text-center text-slate-500 relative overflow-hidden">
+                <div class="flex items-center gap-1.5 text-[10px] font-mono uppercase text-slate-400 mb-1">
+                    <i class="fa-solid fa-rectangle-ad text-amber-500"></i>
+                    <span>Advertisement (AdSterra Bottom Banner)</span>
+                </div>
+                <p class="text-xs text-slate-500">Paste your AdSterra Bottom Banner or Native Ad script code here</p>
 
-                <!-- AdSterra Bottom Leaderboard 728x90 Code Start -->
-                <!-- <script type="text/javascript">
-                    atOptions = {
-                        'key' : 'YOUR_ADSTERRA_BOTTOM_KEY',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                    };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/YOUR_ADSTERRA_BOTTOM_KEY/invoke.js"></script> -->
-                <!-- AdSterra Bottom Leaderboard 728x90 Code End -->
+                <!-- ========================================================= -->
+                <!-- ADSTERRA BOTTOM BANNER CODE PLACEHOLDER -->
+                <!-- ========================================================= -->
             </div>
         </div>
 
@@ -432,368 +526,359 @@
     <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 py-8 px-4 text-xs mt-12">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
-                <i class="fa-solid font-bold fa-camera-retro text-amber-500 text-base"></i>
+                <i class="fa-solid fa-camera-retro text-cyan-400 text-base"></i>
                 <span class="font-bold text-white text-sm">FrameSnap</span>
-                <span class="text-slate-600">|</span>
+                <span class="text-slate-700">|</span>
                 <span>© 2026 FrameSnap Studio. All rights reserved.</span>
             </div>
 
-            <!-- Legal Page Trigger Buttons -->
+            <!-- Footer Legal Trigger Buttons -->
             <div class="flex flex-wrap items-center justify-center gap-4 text-slate-300">
-                <button onclick="openModal('privacyModal')" class="hover:text-amber-400 transition">Privacy Policy</button>
-                <button onclick="openModal('termsModal')" class="hover:text-amber-400 transition">Terms of Service</button>
-                <button onclick="openModal('cookieModal')" class="hover:text-amber-400 transition">Cookie Policy</button>
-                <button onclick="openModal('contactModal')" class="hover:text-amber-400 transition">Contact Us</button>
+                <button onclick="openModal('privacyModal')" class="hover:text-cyan-400 transition">Privacy Policy</button>
+                <button onclick="openModal('termsModal')" class="hover:text-cyan-400 transition">Terms of Service</button>
+                <button onclick="openModal('cookieModal')" class="hover:text-cyan-400 transition">Cookie Policy</button>
+                <button onclick="openModal('contactModal')" class="hover:text-cyan-400 transition">Contact & DMCA</button>
             </div>
         </div>
     </footer>
 
-    <!-- COOKIE & ADVERTISING CONSENT BANNER -->
-    <div id="cookieConsentBanner" class="fixed bottom-0 inset-x-0 z-50 p-4 bg-slate-900/95 border-t border-amber-500/30 backdrop-blur-md text-xs text-slate-300 shadow-2xl transition-transform duration-500 transform translate-y-0">
+    <!-- STICKY COOKIE & ADVERTISING CONSENT BANNER -->
+    <div id="cookieConsentBanner" class="fixed bottom-0 inset-x-0 z-50 p-4 bg-slate-900/95 border-t border-cyan-500/30 backdrop-blur-md text-xs text-slate-300 shadow-2xl transition-transform duration-500">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-start gap-3">
-                <i class="fa-solid font-bold fa-cookie-bite text-amber-500 text-xl mt-0.5"></i>
+                <i class="fa-solid fa-cookie-bite text-amber-500 text-xl mt-0.5 shrink-0"></i>
                 <div>
-                    <p class="font-semibold text-white">We Value Your Privacy & Cookies Settings</p>
+                    <p class="font-semibold text-white">Privacy & Cookie Preferences</p>
                     <p class="text-slate-400 text-[11px] mt-0.5 max-w-3xl">
-                        We use cookies and third-party advertising partners (such as AdSterra) to deliver non-intrusive ads and improve user experience. Your uploaded video files are <strong>never sent to any server</strong> and are processed 100% locally in your browser RAM. Read our <button onclick="openModal('privacyModal')" class="underline text-amber-400">Privacy Policy</button> for full disclosure.
+                        We use essential cookies and third-party advertising partners (such as AdSterra) to serve relevant advertisements. Your loaded video files remain <strong>100% local and private</strong> inside your browser. See our <button onclick="openModal('privacyModal')" class="underline text-cyan-400">Privacy Policy</button>.
                     </p>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-                <button id="btnAcceptCookies" class="px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow-md">
+                <button id="btnAcceptCookies" class="px-5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold transition shadow-md">
                     Accept & Continue
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ==================== MODALS CONTAINER ==================== -->
-
-    <!-- HOW IT WORKS MODAL -->
-    <div id="howItWorksModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('howItWorksModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid font-bold fa-xmark text-lg"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid font-bold fa-circle-play text-amber-500"></i> How to Use FrameSnap</h3>
-            <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-                <p>FrameSnap is a high-precision video frame extractor designed for videographers, graphic designers, content creators, and researchers who need exact still photos from video files without losing image quality.</p>
-                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                    <h4 class="font-bold text-amber-400 mb-1">Key Features:</h4>
-                    <ul class="list-disc list-inside space-y-1">
-                        <li><strong>Single Frame Stepping:</strong> Advance or rewind video frame-by-frame (~0.033s increments for standard 30fps).</li>
-                        <li><strong>Lossless Snapshot Export:</strong> Save high-resolution frames in PNG or JPEG format matching full original video dimensions.</li>
-                        <li><strong>100% Client-Side Privacy:</strong> Videos are loaded locally in HTML5 memory. No network bandwidth consumed for file uploads.</li>
-                        <li><strong>Batch Zip Export:</strong> Save dozens of frame captures in one click.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PRIVACY POLICY MODAL (Ad Network & GDPR Compliant) -->
+    <!-- PRIVACY POLICY MODAL -->
     <div id="privacyModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('privacyModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid font-bold fa-xmark text-lg"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid font-bold fa-shield-halved text-amber-500"></i> Privacy Policy</h3>
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('privacyModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Privacy Policy</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
                 <p><strong>Effective Date: October 2026</strong></p>
-                <p>At FrameSnap, privacy is our top priority. This Privacy Policy details how information is handled when you use our web application.</p>
-                
-                <h4 class="font-bold text-white text-sm">1. Zero Upload / Client-Side File Guarantee</h4>
-                <p>FrameSnap operates exclusively on the client side using HTML5 Video and Canvas APIs. When you select or drag-and-drop a video file into FrameSnap, <strong>the file is never uploaded to any cloud server or third-party storage</strong>. All processing occurs locally on your machine within your browser's active memory (RAM).</p>
-
-                <h4 class="font-bold text-white text-sm">2. Third-Party Advertising & Cookies</h4>
-                <p>We work with third-party ad networks, including <strong>AdSterra</strong> and advertising partners, to display advertisements on our site. These ad platforms may use cookies, web beacons, and device identifiers to show relevant advertisements based on your general region and browser type.</p>
-
-                <h4 class="font-bold text-white text-sm">3. GDPR & CCPA Compliance</h4>
-                <p>Under European General Data Protection Regulation (GDPR) and California Consumer Privacy Act (CCPA), users have the right to inspect cookie usage and opt-out of personalized tracking. You may clear cookies anytime in your browser settings.</p>
+                <p>At FrameSnap, user privacy and data security are paramount.</p>
+                <h4 class="font-bold text-white text-sm">1. Client-Side Processing Guarantee</h4>
+                <p>All video rendering, frame decoding, and image export processes are executed locally on your client machine using HTML5 APIs. <strong>No video or image data is ever uploaded to any server.</strong></p>
+                <h4 class="font-bold text-white text-sm">2. Third-Party Advertising & AdSterra</h4>
+                <p>We work with third-party ad networks including AdSterra. These networks may place cookies or non-personal identifiers to deliver targeted advertisements according to standard advertising policies.</p>
+                <h4 class="font-bold text-white text-sm">3. GDPR & User Rights</h4>
+                <p>Users have the right to clear local cookies at any time via browser controls. You can opt out of personalized tracking through third-party banner choices.</p>
             </div>
         </div>
     </div>
 
     <!-- TERMS OF SERVICE MODAL -->
     <div id="termsModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('termsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid font-bold fa-xmark text-lg"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid font-bold fa-scale-balanced text-amber-500"></i> Terms of Service</h3>
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('termsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-cyan-400"></i> Terms of Service</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-                <p>By using FrameSnap, you agree to comply with these Terms of Service.</p>
-                <h4 class="font-bold text-white text-sm">1. Acceptable Use</h4>
-                <p>FrameSnap is provided as a utility tool for capturing image snapshots from video files you possess lawful rights to view and modify. You agree not to use the service for copyright infringement or unlawful distribution of media.</p>
-                <h4 class="font-bold text-white text-sm">2. Disclaimer of Warranty</h4>
-                <p>The application is provided "AS IS" without warranties of any kind. FrameSnap assumes no liability for video compatibility issues or browser canvas rendering limitations.</p>
+                <p>By accessing FrameSnap, you agree to these Terms of Service.</p>
+                <h4 class="font-bold text-white text-sm">1. Permitted Use</h4>
+                <p>FrameSnap is provided for legal media frame extraction. Users are responsible for ensuring they hold proper copyright or authorization for any media processed.</p>
+                <h4 class="font-bold text-white text-sm">2. Limitation of Liability</h4>
+                <p>FrameSnap is provided "AS IS" without warranty. We hold no liability for local browser performance or media rendering discrepancies.</p>
             </div>
         </div>
     </div>
 
     <!-- COOKIE POLICY MODAL -->
     <div id="cookieModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('cookieModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid font-bold fa-xmark text-lg"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid font-bold fa-cookie text-amber-500"></i> Cookie & Ad Policy</h3>
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('cookieModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-cookie-bite text-amber-500"></i> Cookie Policy</h3>
             <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
-                <p>FrameSnap uses cookies exclusively for operational preferences (such as saving cookie banner dismissal status) and supporting third-party advertisement delivery via AdSterra and affiliate partners.</p>
-                <p>You can manage or disable cookies directly inside your web browser preferences at any time.</p>
+                <p>FrameSnap uses cookies solely for storing essential site preferences (such as cookie banner acceptance) and supporting advertising partners like AdSterra.</p>
             </div>
         </div>
     </div>
 
-    <!-- CONTACT US MODAL -->
+    <!-- CONTACT & DMCA MODAL -->
     <div id="contactModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-            <button onclick="closeModal('contactModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid font-bold fa-xmark text-lg"></i></button>
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid font-bold fa-envelope text-amber-500"></i> Contact Us</h3>
+        <div class="bg-panelbg border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('contactModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-envelope text-cyan-400"></i> Contact Us & DMCA Notice</h3>
             <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-3">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
-                    <input type="text" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    <input type="text" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-cyan-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
-                    <input type="email" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-500 outline-none">
+                    <input type="email" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-cyan-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Message</label>
-                    <textarea rows="3" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-500 outline-none"></textarea>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Message / DMCA Notice</label>
+                    <textarea rows="3" required class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:border-cyan-500 outline-none"></textarea>
                 </div>
-                <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase rounded-lg transition shadow-md">
+                <button type="submit" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase rounded-lg transition shadow-md">
                     Send Message
                 </button>
-                <p id="contactSuccessMsg" class="hidden text-xs text-emerald-400 font-medium text-center mt-2">Thank you! Your inquiry has been sent.</p>
+                <p id="contactSuccessMsg" class="hidden text-xs text-emerald-400 font-medium text-center mt-2">Message sent successfully!</p>
             </form>
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <!-- JAVASCRIPT APPLICATION ENGINE -->
     <script>
-        // State variables
+        // Application State
         let videoFile = null;
-        let capturedFrames = []; // Array of { id, dataUrl, timestamp, format, width, height }
-        const FRAME_DURATION = 1 / 30; // Default step ~ 0.0333s for 30fps
+        let capturedFrames = []; 
+        const DEFAULT_FRAME_STEP = 1 / 30; // ~0.0333s for standard 30fps
 
-        // DOM Element References
+        // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const videoFileInput = document.getElementById('videoFileInput');
-        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-        const playerSection = document.getElementById('playerSection');
-        const videoElement = document.getElementById('videoElement');
-        const captureCanvas = document.getElementById('captureCanvas');
+        const playerContainer = document.getElementById('playerContainer');
+        const mainVideo = document.getElementById('mainVideo');
+        const hiddenCanvas = document.getElementById('hiddenCanvas');
         const timeScrubber = document.getElementById('timeScrubber');
-        const currentTimeDisplay = document.getElementById('currentTimeDisplay');
-        const totalTimeDisplay = document.getElementById('totalTimeDisplay');
-        const fileStatusBadge = document.getElementById('fileStatusBadge');
+        const currentTimeText = document.getElementById('currentTimeText');
+        const totalTimeText = document.getElementById('totalTimeText');
+        const fileBadge = document.getElementById('fileBadge');
         
-        // Video Specs Display
+        // Metadata Displays
         const specResolution = document.getElementById('specResolution');
         const specDuration = document.getElementById('specDuration');
         const specFps = document.getElementById('specFps');
         const specSize = document.getElementById('specSize');
 
-        // Buttons
-        const btnPlayPause = document.getElementById('btnPlayPause');
-        const playIcon = document.getElementById('playIcon');
-        const playText = document.getElementById('playText');
-        const btnStepBackSec = document.getElementById('btnStepBackSec');
-        const btnStepBackFrame = document.getElementById('btnStepBackFrame');
-        const btnStepForwardFrame = document.getElementById('btnStepForwardFrame');
-        const btnStepForwardSec = document.getElementById('btnStepForwardSec');
-        const btnReplaceVideo = document.getElementById('btnReplaceVideo');
-        const btnCaptureFrame = document.getElementById('btnCaptureFrame');
+        // Playback Buttons
+        const btnTogglePlay = document.getElementById('btnTogglePlay');
+        const playStatusIcon = document.getElementById('playStatusIcon');
+        const playStatusText = document.getElementById('playStatusText');
+        const btnMinus5s = document.getElementById('btnMinus5s');
+        const btnMinus1s = document.getElementById('btnMinus1s');
+        const btnPrevFrame = document.getElementById('btnPrevFrame');
+        const btnNextFrame = document.getElementById('btnNextFrame');
+        const btnPlus1s = document.getElementById('btnPlus1s');
+        const btnPlus5s = document.getElementById('btnPlus5s');
+        const btnChangeVideo = document.getElementById('btnChangeVideo');
+
+        // Capture Controls
+        const btnCapture = document.getElementById('btnCapture');
         const formatSelect = document.getElementById('formatSelect');
+        const jpegQualityWrapper = document.getElementById('jpegQualityWrapper');
+        const jpegQuality = document.getElementById('jpegQuality');
+        const qualityValText = document.getElementById('qualityValText');
         const flashOverlay = document.getElementById('flashOverlay');
 
         // Gallery Elements
         const galleryGrid = document.getElementById('galleryGrid');
-        const emptyGalleryNotice = document.getElementById('emptyGalleryNotice');
+        const emptyGalleryState = document.getElementById('emptyGalleryState');
         const galleryCount = document.getElementById('galleryCount');
         const btnClearGallery = document.getElementById('btnClearGallery');
         const btnDownloadZip = document.getElementById('btnDownloadZip');
 
-        // File Drag & Drop Handlers
+        // Drag & Drop File Handlers
         dropZone.addEventListener('click', () => videoFileInput.click());
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.classList.add('border-amber-500', 'bg-slate-900');
+            dropZone.classList.add('border-cyan-400', 'bg-slate-900');
         });
 
         dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('border-amber-500', 'bg-slate-900');
+            dropZone.classList.remove('border-cyan-400', 'bg-slate-900');
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-amber-500', 'bg-slate-900');
+            dropZone.classList.remove('border-cyan-400', 'bg-slate-900');
             if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                handleVideoFile(e.dataTransfer.files[0]);
+                processSelectedVideo(e.dataTransfer.files[0]);
             }
         });
 
         videoFileInput.addEventListener('change', (e) => {
             if (e.target.files && e.target.files.length > 0) {
-                handleVideoFile(e.target.files[0]);
+                processSelectedVideo(e.target.files[0]);
             }
         });
 
-        btnReplaceVideo.addEventListener('click', () => videoFileInput.click());
+        btnChangeVideo.addEventListener('click', () => videoFileInput.click());
 
-        // Process Selected Video File
-        function handleVideoFile(file) {
+        // Process Selected Local Video
+        function processSelectedVideo(file) {
             if (!file.type.startsWith('video/')) {
-                showToast('Please select a valid video file (MP4, WebM, MOV, OGG).', 'error');
+                showToast('Invalid file format. Please select an MP4, MOV, WebM, or OGV video.', 'error');
                 return;
             }
 
             videoFile = file;
-            const videoUrl = URL.createObjectURL(file);
-            videoElement.src = videoUrl;
+            const videoObjectURL = URL.createObjectURL(file);
+            mainVideo.src = videoObjectURL;
 
-            // Update Metadata specs
-            fileStatusBadge.textContent = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
-            fileStatusBadge.classList.replace('text-slate-400', 'text-amber-400');
+            fileBadge.textContent = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
+            fileBadge.classList.replace('text-slate-400', 'text-cyan-400');
             specSize.textContent = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
 
-            // Show player container
             dropZone.classList.add('hidden');
-            playerSection.classList.remove('hidden');
-            playerSection.classList.add('flex');
+            playerContainer.classList.remove('hidden');
+            playerContainer.classList.add('flex');
         }
 
-        // Video Metadata Loaded
-        videoElement.addEventListener('loadedmetadata', () => {
-            timeScrubber.max = videoElement.duration;
+        // Video Metadata Loaded Event
+        mainVideo.addEventListener('loadedmetadata', () => {
+            timeScrubber.max = mainVideo.duration;
             timeScrubber.value = 0;
             
-            totalTimeDisplay.textContent = formatTime(videoElement.duration);
-            currentTimeDisplay.textContent = formatTime(0);
+            totalTimeText.textContent = formatTime(mainVideo.duration);
+            currentTimeText.textContent = formatTime(0);
 
-            specResolution.textContent = `${videoElement.videoWidth} x ${videoElement.videoHeight}`;
-            specDuration.textContent = formatTime(videoElement.duration, false);
-            specFps.textContent = '~29.97 (Standard)';
+            specResolution.textContent = `${mainVideo.videoWidth} x ${mainVideo.videoHeight}`;
+            specDuration.textContent = formatTime(mainVideo.duration, false);
         });
 
         // Time Update Synchronization
-        videoElement.addEventListener('timeupdate', () => {
-            timeScrubber.value = videoElement.currentTime;
-            currentTimeDisplay.textContent = formatTime(videoElement.currentTime);
+        mainVideo.addEventListener('timeupdate', () => {
+            timeScrubber.value = mainVideo.currentTime;
+            currentTimeText.textContent = formatTime(mainVideo.currentTime);
         });
 
-        // Scrubber manual move
+        // Scrubber Drag Event
         timeScrubber.addEventListener('input', () => {
-            videoElement.currentTime = parseFloat(timeScrubber.value);
-            currentTimeDisplay.textContent = formatTime(videoElement.currentTime);
+            mainVideo.currentTime = parseFloat(timeScrubber.value);
+            currentTimeText.textContent = formatTime(mainVideo.currentTime);
         });
 
-        // Play / Pause Toggle
-        btnPlayPause.addEventListener('click', togglePlayPause);
-        videoElement.addEventListener('click', togglePlayPause);
+        // Playback Control Toggle
+        btnTogglePlay.addEventListener('click', togglePlayback);
+        mainVideo.addEventListener('click', togglePlayback);
 
-        function togglePlayPause() {
-            if (videoElement.paused) {
-                videoElement.play();
-                playIcon.classList.replace('fa-play', 'fa-pause');
-                playText.textContent = 'Pause';
+        function togglePlayback() {
+            if (mainVideo.paused) {
+                mainVideo.play();
+                playStatusIcon.classList.replace('fa-play', 'fa-pause');
+                playStatusText.textContent = 'Pause';
             } else {
-                videoElement.pause();
-                playIcon.classList.replace('fa-pause', 'fa-play');
-                playText.textContent = 'Play';
+                mainVideo.pause();
+                playStatusIcon.classList.replace('fa-pause', 'fa-play');
+                playStatusText.textContent = 'Play';
             }
         }
 
-        // Stepping Controls
-        btnStepBackSec.addEventListener('click', () => stepVideo(-1.0));
-        btnStepForwardSec.addEventListener('click', () => stepVideo(1.0));
-        btnStepBackFrame.addEventListener('click', () => stepVideo(-FRAME_DURATION));
-        btnStepForwardFrame.addEventListener('click', () => stepVideo(FRAME_DURATION));
+        // Precision Steppers
+        btnMinus5s.addEventListener('click', () => stepTime(-5.0));
+        btnMinus1s.addEventListener('click', () => stepTime(-1.0));
+        btnPrevFrame.addEventListener('click', () => stepTime(-DEFAULT_FRAME_STEP));
+        btnNextFrame.addEventListener('click', () => stepTime(DEFAULT_FRAME_STEP));
+        btnPlus1s.addEventListener('click', () => stepTime(1.0));
+        btnPlus5s.addEventListener('click', () => stepTime(5.0));
 
-        function stepVideo(deltaSeconds) {
-            videoElement.pause();
-            playIcon.classList.replace('fa-pause', 'fa-play');
-            playText.textContent = 'Play';
+        function stepTime(seconds) {
+            mainVideo.pause();
+            playStatusIcon.classList.replace('fa-pause', 'fa-play');
+            playStatusText.textContent = 'Play';
 
-            let newTime = videoElement.currentTime + deltaSeconds;
+            let newTime = mainVideo.currentTime + seconds;
             if (newTime < 0) newTime = 0;
-            if (newTime > videoElement.duration) newTime = videoElement.duration;
+            if (newTime > mainVideo.duration) newTime = mainVideo.duration;
             
-            videoElement.currentTime = newTime;
+            mainVideo.currentTime = newTime;
         }
 
-        // Frame Capture Core Logic
-        btnCaptureFrame.addEventListener('click', captureFrame);
+        // Format Select Switcher
+        formatSelect.addEventListener('change', () => {
+            if (formatSelect.value === 'jpeg') {
+                jpegQualityWrapper.classList.remove('hidden');
+                jpegQualityWrapper.classList.add('flex');
+            } else {
+                jpegQualityWrapper.classList.add('hidden');
+                jpegQualityWrapper.classList.remove('flex');
+            }
+        });
 
-        function captureFrame() {
-            if (!videoElement.videoWidth || !videoElement.videoHeight) {
-                showToast('Video is not ready for capture yet.', 'error');
+        jpegQuality.addEventListener('input', () => {
+            qualityValText.textContent = Math.round(jpegQuality.value * 100) + '%';
+        });
+
+        // Frame Capture Core Logic
+        btnCapture.addEventListener('click', executeCapture);
+
+        function executeCapture() {
+            if (!mainVideo.videoWidth || !mainVideo.videoHeight) {
+                showToast('Video feed not ready for capture.', 'error');
                 return;
             }
 
-            // Set canvas size equal to raw video source resolution
-            captureCanvas.width = videoElement.videoWidth;
-            captureCanvas.height = videoElement.videoHeight;
+            hiddenCanvas.width = mainVideo.videoWidth;
+            hiddenCanvas.height = mainVideo.videoHeight;
 
-            const ctx = captureCanvas.getContext('2d');
-            ctx.drawImage(videoElement, 0, 0, captureCanvas.width, captureCanvas.height);
+            const ctx = hiddenCanvas.getContext('2d');
+            ctx.drawImage(mainVideo, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
 
             const format = formatSelect.value;
             const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
-            const quality = format === 'jpeg' ? 0.95 : 1.0;
+            const quality = format === 'jpeg' ? parseFloat(jpegQuality.value) : 1.0;
 
-            const dataUrl = captureCanvas.toDataURL(mimeType, quality);
-            const timeCode = formatTime(videoElement.currentTime);
+            const dataUrl = hiddenCanvas.toDataURL(mimeType, quality);
+            const timeCode = formatTime(mainVideo.currentTime);
 
-            // Trigger visual flash feedback
+            // Shutter Flash Visual Effect
             flashOverlay.classList.remove('flash-effect');
-            void flashOverlay.offsetWidth; // trigger reflow
+            void flashOverlay.offsetWidth;
             flashOverlay.classList.add('flash-effect');
 
-            // Save object to state
-            const frameItem = {
-                id: Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+            const newSnapshot = {
+                id: 'snap_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
                 dataUrl: dataUrl,
                 timestamp: timeCode,
-                rawTime: videoElement.currentTime,
                 format: format.toUpperCase(),
-                width: videoElement.videoWidth,
-                height: videoElement.videoHeight
+                width: mainVideo.videoWidth,
+                height: mainVideo.videoHeight
             };
 
-            capturedFrames.unshift(frameItem);
-            renderGallery();
+            capturedFrames.unshift(newSnapshot);
+            renderGalleryGrid();
+            showToast('Snapshot captured!', 'success');
         }
 
-        // Render Captured Gallery Items
-        function renderGallery() {
+        // Render Captured Gallery Cards
+        function renderGalleryGrid() {
             if (capturedFrames.length === 0) {
-                emptyGalleryNotice.classList.remove('hidden');
+                emptyGalleryState.classList.remove('hidden');
                 btnClearGallery.disabled = true;
                 btnDownloadZip.disabled = true;
                 galleryCount.textContent = '0';
-                // remove existing cards
-                const cards = galleryGrid.querySelectorAll('.frame-card');
+                
+                const cards = galleryGrid.querySelectorAll('.snapshot-card');
                 cards.forEach(c => c.remove());
                 return;
             }
 
-            emptyGalleryNotice.classList.add('hidden');
+            emptyGalleryState.classList.add('hidden');
             btnClearGallery.disabled = false;
             btnDownloadZip.disabled = false;
             galleryCount.textContent = capturedFrames.length;
 
-            // Remove existing cards and redraw
-            const cards = galleryGrid.querySelectorAll('.frame-card');
+            const cards = galleryGrid.querySelectorAll('.snapshot-card');
             cards.forEach(c => c.remove());
 
-            capturedFrames.forEach((frame, idx) => {
+            capturedFrames.forEach((frame) => {
                 const card = document.createElement('div');
-                card.className = 'frame-card bg-slate-950 border border-slate-800 hover:border-amber-500/50 rounded-xl overflow-hidden flex flex-col justify-between group transition shadow-lg';
+                card.className = 'snapshot-card bg-slate-950 border border-slate-800 hover:border-cyan-500/50 rounded-xl overflow-hidden flex flex-col justify-between transition shadow-lg';
                 
                 card.innerHTML = `
-                    <div class="relative overflow-hidden aspect-video bg-black flex items-center justify-center">
-                        <img src="${frame.dataUrl}" alt="Captured frame at ${frame.timestamp}" class="w-full h-full object-contain">
-                        <span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-amber-400 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-700">
+                    <div class="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
+                        <img src="${frame.dataUrl}" alt="Snapshot at ${frame.timestamp}" class="w-full h-full object-contain">
+                        <span class="absolute top-2 left-2 bg-slate-900/90 backdrop-blur-md text-amber-400 font-mono text-[10px] px-2 py-0.5 rounded border border-slate-800">
                             ${frame.timestamp}
                         </span>
-                        <span class="absolute top-2 right-2 bg-slate-900/80 backdrop-blur-md text-slate-300 font-mono text-[10px] px-1.5 py-0.5 rounded border border-slate-700">
+                        <span class="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-md text-slate-300 font-mono text-[10px] px-1.5 py-0.5 rounded border border-slate-800">
                             ${frame.format}
                         </span>
                     </div>
@@ -802,11 +887,11 @@
                             ${frame.width}x${frame.height}
                         </div>
                         <div class="flex items-center gap-1.5">
-                            <button onclick="downloadSingleFrame('${frame.id}')" class="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-slate-950 text-xs font-semibold transition border border-amber-500/30 flex items-center gap-1" title="Download Image">
-                                <i class="fa-solid font-bold fa-download"></i> Save
+                            <button onclick="downloadSingle('${frame.id}')" class="px-2.5 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500 text-cyan-400 hover:text-slate-950 text-xs font-semibold transition border border-cyan-500/30 flex items-center gap-1" title="Download Image">
+                                <i class="fa-solid fa-download"></i> Save
                             </button>
-                            <button onclick="deleteSingleFrame('${frame.id}')" class="px-2 py-1 rounded bg-slate-900 hover:bg-rose-950 hover:text-rose-400 text-slate-500 text-xs transition border border-slate-800" title="Delete Snapshot">
-                                <i class="fa-solid font-bold fa-trash"></i>
+                            <button onclick="deleteSingle('${frame.id}')" class="px-2 py-1 rounded bg-slate-900 hover:bg-rose-950 hover:text-rose-400 text-slate-500 text-xs transition border border-slate-800" title="Delete Snapshot">
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -815,8 +900,8 @@
             });
         }
 
-        // Single Image Download
-        window.downloadSingleFrame = function(id) {
+        // Download Single Image
+        window.downloadSingle = function(id) {
             const frame = capturedFrames.find(f => f.id === id);
             if (!frame) return;
 
@@ -831,33 +916,34 @@
             document.body.removeChild(a);
         };
 
-        // Single Image Delete
-        window.deleteSingleFrame = function(id) {
+        // Delete Single Snapshot
+        window.deleteSingle = function(id) {
             capturedFrames = capturedFrames.filter(f => f.id !== id);
-            renderGallery();
+            renderGalleryGrid();
         };
 
-        // Clear All Gallery Items
+        // Clear All Gallery
         btnClearGallery.addEventListener('click', () => {
             capturedFrames = [];
-            renderGallery();
+            renderGalleryGrid();
+            showToast('Gallery cleared', 'info');
         });
 
-        // Batch ZIP Download with JSZip
+        // Download All (ZIP) via JSZip
         btnDownloadZip.addEventListener('click', async () => {
             if (capturedFrames.length === 0) return;
 
             btnDownloadZip.disabled = true;
-            btnDownloadZip.innerHTML = `<i class="fa-solid font-bold fa-spinner fa-spin"></i> Zipping...`;
+            btnDownloadZip.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Creating ZIP...`;
 
             try {
                 const zip = new JSZip();
-                const folder = zip.folder("framesnap_snapshots");
+                const folder = zip.folder("FrameSnap_Export");
 
                 capturedFrames.forEach((frame, idx) => {
                     const safeStamp = frame.timestamp.replace(/[:.]/g, '-');
                     const base64Data = frame.dataUrl.split(',')[1];
-                    const fileName = `frame_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
+                    const fileName = `FrameSnap_${idx + 1}_${safeStamp}.${frame.format.toLowerCase()}`;
                     folder.file(fileName, base64Data, { base64: true });
                 });
 
@@ -866,20 +952,21 @@
 
                 const a = document.createElement('a');
                 a.href = zipUrl;
-                a.download = `FrameSnap_Export_${Date.now()}.zip`;
+                a.download = `FrameSnap_Collection_${Date.now()}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                showToast('ZIP archive downloaded successfully!', 'success');
 
             } catch (err) {
-                showToast('Failed to create ZIP archive. Downloading individually.', 'error');
+                showToast('Failed to create ZIP package.', 'error');
             } finally {
                 btnDownloadZip.disabled = false;
-                btnDownloadZip.innerHTML = `<i class="fa-solid font-bold fa-file-zipper"></i> Download All (ZIP)`;
+                btnDownloadZip.innerHTML = `<i class="fa-solid fa-file-zipper"></i> Download All (ZIP)`;
             }
         });
 
-        // Helper: Format seconds to HH:MM:SS.mmm
+        // Helper: Format Seconds to HH:MM:SS.mmm
         function formatTime(seconds, includeMillis = true) {
             if (isNaN(seconds)) return includeMillis ? "00:00:00.000" : "00:00:00";
             
@@ -896,7 +983,20 @@
             return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
         }
 
-        // Modal Management
+        // FAQ Accordion Toggle
+        window.toggleFaq = function(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById(id + 'Icon');
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+            } else {
+                el.classList.add('hidden');
+                icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+            }
+        };
+
+        // Modal Controls
         window.openModal = function(id) {
             document.getElementById(id).classList.remove('hidden');
         };
@@ -905,7 +1005,7 @@
             document.getElementById(id).classList.add('hidden');
         };
 
-        // Contact Form Handler
+        // Contact Form Submission Handler
         window.handleContactSubmit = function(e) {
             e.preventDefault();
             const msg = document.getElementById('contactSuccessMsg');
@@ -917,7 +1017,7 @@
             }, 2000);
         };
 
-        // Cookie Banner Consent Handler
+        // Cookie Banner Consent
         const btnAcceptCookies = document.getElementById('btnAcceptCookies');
         const cookieBanner = document.getElementById('cookieConsentBanner');
 
@@ -926,18 +1026,17 @@
             localStorage.setItem('framesnap_cookies_accepted', 'true');
         });
 
-        // Check Cookie Consent on Load
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('framesnap_cookies_accepted') === 'true') {
                 cookieBanner.classList.add('translate-y-full');
             }
         });
 
-        // Simple Toast Notification
+        // Toast Messages Helper
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
-            toast.className = `fixed top-20 right-5 z-50 px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold text-white flex items-center gap-2 transition-all duration-300 ${type === 'error' ? 'bg-rose-600' : 'bg-amber-600'}`;
-            toast.innerHTML = `<i class="fa-solid font-bold ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> ${message}`;
+            toast.className = `fixed top-20 right-5 z-50 px-4 py-3 rounded-xl shadow-2xl text-xs font-semibold text-white flex items-center gap-2 transition-all duration-300 ${type === 'error' ? 'bg-rose-600' : 'bg-cyan-600'}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> ${message}`;
             document.body.appendChild(toast);
 
             setTimeout(() => {
